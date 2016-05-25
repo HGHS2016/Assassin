@@ -9,7 +9,11 @@
 		"express": "4.13.x",
 		"cfenv": "1.0.x",
 		"nano" : "*",
+<<<<<<< Upstream, based on 09e748e830af04535e3a7ae5b15c75062bf28d0e
                 "jade" : ">=1.1.4"
+=======
+		"pug"  : "*"
+>>>>>>> 1d3adce added "pug" (the new name for jade) to dependencies and added the launch configuration folder to the git
 	},
 	"repository": {},
 	"engines": {
