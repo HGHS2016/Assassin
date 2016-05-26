@@ -8,7 +8,7 @@ var express = require('express');
 var app = express();
 
 var cloudant = {
-		 		 url : "https://edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix:6d0fd78d822e7fa111e98b26c317ebddb5464fecf17d2731d7a0bb50ddd01c7b@edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix.cloudant.com"	 		 
+url : "https://edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix:6d0fd78d822e7fa111e98b26c317ebddb5464fecf17d2731d7a0bb50ddd01c7b@edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix.cloudant.com"	 		 
 };
 
 // cfenv provides access to your Cloud Foundry environment
@@ -35,3 +35,20 @@ app.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
   console.log("server starting on " + appEnv.url);
 });
+
+// Set path to JavaScript files
+app.set('js', __dirname + '/js');
+
+// Set path to image files
+app.set('images', __dirname + '/images');
+
+//////////////////////////////////////////////////////////////
+
+app.get('/playerlist', function(request, response) {
+    var players = [];
+        players.push({"first": "Hanzhi", "last": "Zou", "role": "God", "id": "gangrene"});		
+        players.push({"first": "Pineapple", "last": "Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
+      response.send(JSON.stringify(players));
+}); 
+
+
