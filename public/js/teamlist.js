@@ -2,8 +2,8 @@
  * TeamList
  */
 
-function createTableRow(teamID, player1, player2, target) {
-  return '<tr> <td>' + teamID + '</td><td>' + player1 + '</td><td>' + player2 + '</td><td>' + target + '</td></tr>';
+function createTableRow(teamName, player1, player2, target) {
+  return '<tr> <td>' + teamName + '</td><td>' + player1 + '</td><td>' + player2 + '</td><td>' + target + '</td></tr>';
 }
 
 /**
@@ -15,7 +15,7 @@ function populateTable() {
   $.get("/teamlist", function (data) {
     var teams = JSON.parse(data);
     teams.forEach(function (team) {
-      var html = createTableRow(team.teamID, team.player1, team.player2, team.target);
+      var html = createTableRow(team.teamName, team.player1, team.player2, team.target);
       table.last().after(html);		
     });
   });	
