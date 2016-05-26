@@ -21,7 +21,7 @@ var appEnv = cfenv.getAppEnv();
 // Parse out Cloudant settings
 
 if (!appEnv.isLocal) {
-   cloudant = appEnv.getServices('cloudantNoSQLDB')[0].credentials;
+   cloudant = appEnv.getServiceCreds(/Cloudant/);
 }
 
 var nano = require('nano')(cloudant.url);
