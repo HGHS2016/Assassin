@@ -1,0 +1,15 @@
+#header {
+	color:gray;
+}
+
+.table-header {
+	color:aqua;
+}
+
+td {
+	color:white;
+}
+
+table,th,td {
+	border:3px solid black;
+}

@@ -6,6 +6,10 @@
 
 var express = require('express');
 var app = express();
+//var http = require('http')
+
+//var host = "localhost"
+//var port = 3030;
 
 var cloudant = {
 url : "https://edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix:6d0fd78d822e7fa111e98b26c317ebddb5464fecf17d2731d7a0bb50ddd01c7b@edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix.cloudant.com"	 		 
@@ -42,7 +46,13 @@ app.set('js', __dirname + '/js');
 // Set path to image files
 app.set('images', __dirname + '/images');
 
-//////////////////////////////////////////////////////////////
+// Set path to Jade template directory
+app.set('views', __dirname + '/views');
+
+// Bind the root '/' URL to the gods page
+app.get('/', function(req, res){
+  res.render('gods.jade', {title: 'GODS'});
+});
 
 app.get('/playerlist', function(request, response) {
     var players = [];
@@ -50,5 +60,12 @@ app.get('/playerlist', function(request, response) {
         players.push({"first": "Pineapple", "last": "Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
       response.send(JSON.stringify(players));
 }); 
+
+app.get('/teamlist', function(request,response) {
+    var teams = []; 
+    teams.push({"teamName": "t1", "player1": "Hanzhi Zou", "player2": "Gangrene", "target": "t2"});
+    teams.push({"teamName": "t2", "player1": "Rebecca Dummit", "player2": "Noah Kessler", "target": "t1"});
+    response.send(JSON.stringify(teams));
+})
 
 
