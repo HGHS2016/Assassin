@@ -2,8 +2,8 @@
  * Player List
  */
 
-function createTableRow(first, last, role, id) {
-  return '<tr> <td>' + first + '</td><td>' + last + '</td><td>' + role + '</td><td>' + id + '</td></tr>';
+function createTableRow(name, role, id) {
+  return '<tr> <td>' + name + '</td><td>' + role + '</td><td>' + id + '</td></tr>';
 }
 
 /**
@@ -15,7 +15,7 @@ function populateTable() {
   $.get("/playerlist", function (data) {
     var players = JSON.parse(data);
     players.forEach(function (player) {
-      var html = createTableRow(player.first, player.last, player.role, player.id);
+      var html = createTableRow(player.name, player.role, player.id);
       table.last().after(html);		
     });
   });	

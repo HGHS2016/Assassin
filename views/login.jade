@@ -1,15 +1,16 @@
 doctype html
-html(lang="en")
+html(lang='en')
   head
-    title= title
-  
-    link(rel="stylesheet", href="stylesheets/bootstrap.css", type="text/css")
-    link(rel="stylesheet", href="stylesheets/gods.css", type="text/css")
-      
+    title
+    link(rel='stylesheet', href='stylesheets/bootstrap.css', type='text/css')
+    link(rel='stylesheet', href='stylesheets/style.css', type='text/css')
   body
     p Welcome to Assassins @ Horace Greeley High School! 
-    button(onclick='loggy()') Login
-    script.
-      function loggy(){
-      var id = prompt("Enter ID to log in", "James Zou");
-      }
+    p Already have an account? Are you an assassin or a god? 
+    a(href='http://localhost:6001/targit')
+      button I'm an Assassin
+    a(href='http://localhost:6001/goddy')
+      button I'm a God
+    a(href='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+      button Sign Up
+    button Create A Game

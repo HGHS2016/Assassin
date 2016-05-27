@@ -59,10 +59,18 @@ app.get('/login', function(req, res){
   res.render('login.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
+app.get('/targit', function(req, res){
+  res.render('target.jade', {title: "LET'S GO ASSASSINS"});
+});
+
+app.get('/goddy', function(req, res){
+  res.render('gods.jade', {title: "LET'S GO GODS"});
+});
+
 app.get('/playerlist', function(request, response) {
     var players = [];
-        players.push({"first": "Hanzhi", "last": "Zou", "role": "God", "id": "gangrene"});		
-        players.push({"first": "Pineapple", "last": "Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
+        players.push({"name": "Hanzhi Zou", "role": "God", "id": "gangrene"});		
+        players.push({"name": "Pineapple Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
       response.send(JSON.stringify(players));
 }); 
 
@@ -75,8 +83,8 @@ app.get('/teamlist', function(request,response) {
 
 app.get('/targetlist', function(request,response) {
     var targets = []; 
-    targets.push({"first": "Hanzhi", "last": "Zou", "target": "Sonya", "time": "2 hours"});
-    targets.push({"first": "Jon", "last": "Bass", "target": "Gangrene", "time": "2 minutes"});
+    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
+    targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
     response.send(JSON.stringify(targets));
 })
 

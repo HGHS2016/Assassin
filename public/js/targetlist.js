@@ -2,8 +2,8 @@
  * Target List
  */
 
-function createTableRow(first, last, target, time) {
-  return '<tr> <td>' + first + '</td><td>' + last + '</td><td>' + target + '</td><td>' + time + '</td></tr>';
+function createTableRow(name, target, time) {
+  return '<tr> <td>' + name + '</td><td>' + target + '</td><td>' + time + '</td></tr>';
 }
 
 /**
@@ -15,7 +15,7 @@ function populateTable() {
   $.get("/targetlist", function (data) {
     var targets = JSON.parse(data);
     targets.forEach(function (target) {
-      var html = createTableRow(target.first, target.last, target.target, target.time);
+      var html = createTableRow(target.name, target.target, target.time);
       table.last().after(html);		
     });
   });	
