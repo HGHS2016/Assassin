@@ -12,7 +12,7 @@ var app = express();
 //var port = 3030;
 
 var cloudant = {
-url : "https://edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix:6d0fd78d822e7fa111e98b26c317ebddb5464fecf17d2731d7a0bb50ddd01c7b@edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix.cloudant.com"	 		 
+  url:"https://edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix:6d0fd78d822e7fa111e98b26c317ebddb5464fecf17d2731d7a0bb50ddd01c7b@edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix.cloudant.com"	 		 
 };
 
 // cfenv provides access to your Cloud Foundry environment
@@ -75,12 +75,13 @@ app.get('/teamlist', function(request, response) {
     		response.send(JSON.stringify(teams));
     	}
     });
-app.get('/teamlist', function(request,response) {
+    
+/* app.get('/teamlist', function(request,response) {
     var teams = []; 
     teams.push({"teamName": "t1", "player1": "Hanzhi Zou", "player2": "Gangrene", "target": "t2"});
     teams.push({"teamName": "t2", "player1": "Rebecca Dummit", "player2": "Noah Kessler", "target": "t1"});
     response.send(JSON.stringify(teams));
-});
+}); */
 
 app.get('/targetlist', function(request,response) {
     var targets = []; 
