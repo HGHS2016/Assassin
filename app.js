@@ -60,24 +60,34 @@ app.get('/login', function(req, res){
 });
 
 app.get('/playerlist', function(request, response) {
-    var players = [];
-        players.push({"first": "Hanzhi", "last": "Zou", "role": "God", "id": "gangrene"});		
-        players.push({"first": "Pineapple", "last": "Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
-      response.send(JSON.stringify(players));
+    db.view('players', 'players-index', function(err, body) {
+    	if(!err) {
+    		var players = [];
+    		body.rows.forEach(function(doc) {
+    			players.push(doc.value);
+    		});
+    		response.send(JSON.stringify(players));
+    	}
+    });
 }); 
 
-app.get('/teamlist', function(request,response) {
-    var teams = []; 
-    teams.push({"teamName": "t1", "player1": "Hanzhi Zou", "player2": "Gangrene", "target": "t2"});
-    teams.push({"teamName": "t2", "player1": "Rebecca Dummit", "player2": "Noah Kessler", "target": "t1"});
-    response.send(JSON.stringify(teams));
-})
+app.get('/teamlist', function(request, response) {
+    db.view('teams', 'teams-index', function(err, body) {
+    	if(!err) {
+    		var teams = [];
+    		body.rows.forEach(function(doc) {
+    			teams.push(doc.value);
+    		});
+    		response.send(JSON.stringify(teams));
+    	}
+    });
+});
 
 app.get('/targetlist', function(request,response) {
     var targets = []; 
     targets.push({"first": "Hanzhi", "last": "Zou", "target": "Sonya", "time": "2 hours"});
     targets.push({"first": "Jon", "last": "Bass", "target": "Gangrene", "time": "2 minutes"});
     response.send(JSON.stringify(targets));
-})
+});
 
 
