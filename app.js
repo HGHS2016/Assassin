@@ -49,9 +49,14 @@ app.set('images', __dirname + '/images');
 // Set path to Jade template directory
 app.set('views', __dirname + '/views');
 
-// Bind the root '/' URL to the gods page
+// Bind the root '/' URL to the login page
 app.get('/', function(req, res){
-  res.render('gods.jade', {title: 'GODS'});
+  res.render('gods.jade', {title: "LET'S PLAY ASSASSINS"});
+});
+
+// Bind the root '/' URL to the login page
+app.get('/login', function(req, res){
+  res.render('login.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
 app.get('/playerlist', function(request, response) {
@@ -66,6 +71,13 @@ app.get('/teamlist', function(request,response) {
     teams.push({"teamName": "t1", "player1": "Hanzhi Zou", "player2": "Gangrene", "target": "t2"});
     teams.push({"teamName": "t2", "player1": "Rebecca Dummit", "player2": "Noah Kessler", "target": "t1"});
     response.send(JSON.stringify(teams));
+})
+
+app.get('/targetlist', function(request,response) {
+    var targets = []; 
+    targets.push({"first": "Hanzhi", "last": "Zou", "target": "Sonya", "time": "2 hours"});
+    targets.push({"first": "Jon", "last": "Bass", "target": "Gangrene", "time": "2 minutes"});
+    response.send(JSON.stringify(targets));
 })
 
 

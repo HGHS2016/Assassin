@@ -1,0 +1,15 @@
+doctype html
+html(lang="en")
+  head
+    title= title
+  
+    link(rel="stylesheet", href="stylesheets/bootstrap.css", type="text/css")
+    link(rel="stylesheet", href="stylesheets/gods.css", type="text/css")
+      
+  body
+    p Welcome to Assassins @ Horace Greeley High School! 
+    button(onclick='loggy()') Login
+    script.
+      function loggy(){
+      var id = prompt("Enter ID to log in", "James Zou");
+      }

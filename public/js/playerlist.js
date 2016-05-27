@@ -1,5 +1,5 @@
 /**
- * Hiscores
+ * Player List
  */
 
 function createTableRow(first, last, role, id) {
