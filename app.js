@@ -34,12 +34,6 @@ var db = nano.db.use('assassin');
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
 
-// start server on the specified port and binding host
-app.listen(appEnv.port, '0.0.0.0', function() {
-  // print a message when the server starts listening
-  console.log("server starting on " + appEnv.url);
-});
-
 // Set path to JavaScript files
 app.set('js', __dirname + '/js');
 
@@ -71,13 +65,21 @@ app.get('/teamlist', function(request,response) {
     teams.push({"teamName": "t1", "player1": "Hanzhi Zou", "player2": "Gangrene", "target": "t2"});
     teams.push({"teamName": "t2", "player1": "Rebecca Dummit", "player2": "Noah Kessler", "target": "t1"});
     response.send(JSON.stringify(teams));
-})
+});
 
 app.get('/targetlist', function(request,response) {
     var targets = []; 
     targets.push({"first": "Hanzhi", "last": "Zou", "target": "Sonya", "time": "2 hours"});
     targets.push({"first": "Jon", "last": "Bass", "target": "Gangrene", "time": "2 minutes"});
     response.send(JSON.stringify(targets));
-})
+});
 
+// start server on the specified port and binding host
+var server = app.listen(appEnv.port, '0.0.0.0', function() {
+  // print a message when the server starts listening
+	console.log("server starting on port %d on host %s url %s ", server.address().port, appEnv.bind, appEnv.url);
+});
 
+process.on('exit', function() {
+	console.log('Server is shutting down!');
+    });
