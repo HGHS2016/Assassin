@@ -34,12 +34,6 @@ var db = nano.db.use('assassin');
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
 
-// start server on the specified port and binding host
-app.listen(appEnv.port, '0.0.0.0', function() {
-  // print a message when the server starts listening
-  console.log("server starting on " + appEnv.url);
-});
-
 // Set path to JavaScript files
 app.set('js', __dirname + '/js');
 
@@ -71,6 +65,7 @@ app.get('/playerlist', function(request, response) {
     });
 }); 
 
+<<<<<<< HEAD
 app.get('/teamlist', function(request, response) {
     db.view('teams', 'teams-index', function(err, body) {
     	if(!err) {
@@ -81,6 +76,13 @@ app.get('/teamlist', function(request, response) {
     		response.send(JSON.stringify(teams));
     	}
     });
+=======
+app.get('/teamlist', function(request,response) {
+    var teams = []; 
+    teams.push({"teamName": "t1", "player1": "Hanzhi Zou", "player2": "Gangrene", "target": "t2"});
+    teams.push({"teamName": "t2", "player1": "Rebecca Dummit", "player2": "Noah Kessler", "target": "t1"});
+    response.send(JSON.stringify(teams));
+>>>>>>> 5c3c8138468ca16efbcc958aa6fd65e1b17c3f8c
 });
 
 app.get('/targetlist', function(request,response) {
@@ -90,4 +92,12 @@ app.get('/targetlist', function(request,response) {
     response.send(JSON.stringify(targets));
 });
 
+// start server on the specified port and binding host
+var server = app.listen(appEnv.port, '0.0.0.0', function() {
+  // print a message when the server starts listening
+	console.log("server starting on port %d on host %s url %s ", server.address().port, appEnv.bind, appEnv.url);
+});
 
+process.on('exit', function() {
+	console.log('Server is shutting down!');
+    });
