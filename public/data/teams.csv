@@ -1,6 +1,6 @@
-tid,doctype,pid1,pid2,target,score
-pineapple,team,redummit,hazou,strawberry,0
-strawberry,team,elford,nokessler,grape,0
-grape,team,jobass,lypaskowitz,cantalope,0
-cantalope,team,jastillman,jeliu,peach,0
-peach,team,bedeprez,dosilverman,pineapple,0
+type,name,player1,player2,target,score
+team,pineapple,redummit,hazou,strawberry,0
+team,strawberry,elford,nokessler,grape,0
+team,grape,jobass,lypaskowitz,cantalope,0
+team,cantalope,jastillman,jeliu,peach,0
+team,peach,bedeprez,dosilverman,pineapple,0

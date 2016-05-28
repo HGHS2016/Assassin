@@ -95,14 +95,6 @@ app.get('/teamlist', function(request, response) {
     });
 });
 
-    
-/* app.get('/teamlist', function(request,response) {
-    var teams = []; 
-    teams.push({"teamName": "t1", "player1": "Hanzhi Zou", "player2": "Gangrene", "target": "t2"});
-    teams.push({"teamName": "t2", "player1": "Rebecca Dummit", "player2": "Noah Kessler", "target": "t1"});
-    response.send(JSON.stringify(teams));
-}); */
-
 app.get('/targetlist', function(request,response) {
     var targets = []; 
     targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
@@ -110,7 +102,8 @@ app.get('/targetlist', function(request,response) {
     response.send(JSON.stringify(targets));
 });
 
-app.get('/initdata', function(request,response) {
+
+//app.get('/initdata', function(request,response) {
     /* stub for really dropping and recreating the database. for now we'll just load
        nano.db.destroy('assassin', function(err) {
        if (!err) {
@@ -118,20 +111,30 @@ app.get('/initdata', function(request,response) {
 		   if (!err) {
 		       assassin = nano.db.use('assassin'); }})}})
     */
+/*
        csv.parseCSV("public/data/players.csv", function(data){
   	  data.forEach(function(player) {
-    		assassin.insert(player.value)
-		    })
-	      }, true);
+                  var id = player.first.substr(0,2).concat(player.last).toLowerCase();
+	          assassin.insert(player, id, function(err, body, header) {
+			  if (err) 
+			      { return console.log('[assassin.insert] ', err.message) };
+			  console.log('You have inserted the player.');
+                          console.log(body);
+		      })
+		      })}, true);
 
        csv.parseCSV("public/data/teams.csv", function(data){
-	    data.forEach(function(team) {
-		    assassin.insert(team.value)
-			})
-		}, true);
+  	  data.forEach(function(team) {
+                  assassin.insert(team, team.name, function(err, body, header) {
+			  if (err) 
+			      { return console.log('[assassin.insert] ', err.message) };
+			  console.log('You have inserted the team.');
+                          console.log(body);
+		      })
+	      })}, true);
        response.send('data loading');
     });
-      
+*/      
 
 // start server on the specified port and binding host
 var server = app.listen(appEnv.port, '0.0.0.0', function() {
