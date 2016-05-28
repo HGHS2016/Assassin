@@ -6,6 +6,7 @@
 
 var express = require('express');
 var app = express();
+
 //var http = require('http')
 
 //var host = "localhost"
@@ -18,6 +19,7 @@ var cloudant = {
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
+var csv = require('csv-array');
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
@@ -29,10 +31,7 @@ if (!appEnv.isLocal) {
 }
 
 var nano = require('nano')(cloudant.url);
-var db = nano.db.use('assassin');
-
-// serve the files out of ./public as our main files
-app.use(express.static(__dirname + '/public'));
+var assassin = nano.db.use('assassin');
 
 // Set path to JavaScript files
 app.set('js', __dirname + '/js');
@@ -42,6 +41,12 @@ app.set('images', __dirname + '/images');
 
 // Set path to Jade template directory
 app.set('views', __dirname + '/views');
+
+// Set path to Jade template directory
+app.set('data', __dirname + '/data');
+
+// serve the files out of ./public as our main files
+app.use(express.static(__dirname + '/public'));
 
 // Bind the root '/' URL to the login page
 app.get('/', function(req, res){
@@ -67,7 +72,7 @@ app.get('/playerlist', function(request, response) {
         players.push({"name": "Pineapple Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
       response.send(JSON.stringify(players));
       */
-    db.view('players', 'players-index', function(err, body) {
+    assassin.view('players', 'players-index', function(err, body) {
     	if(!err) {
     		var players = [];
     		body.rows.forEach(function(doc) {
@@ -79,7 +84,7 @@ app.get('/playerlist', function(request, response) {
 }); 
 
 app.get('/teamlist', function(request, response) {
-    db.view('teams', 'teams-index', function(err, body) {
+    assassin.view('teams', 'teams-index', function(err, body) {
     	if(!err) {
     		var teams = [];
     		body.rows.forEach(function(doc) {
@@ -104,6 +109,29 @@ app.get('/targetlist', function(request,response) {
     targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
     response.send(JSON.stringify(targets));
 });
+
+app.get('/initdata', function(request,response) {
+    /* stub for really dropping and recreating the database. for now we'll just load
+       nano.db.destroy('assassin', function(err) {
+       if (!err) {
+	   nano.db.create('assassin', function(err) {
+		   if (!err) {
+		       assassin = nano.db.use('assassin'); }})}})
+    */
+       csv.parseCSV("public/data/players.csv", function(data){
+  	  data.forEach(function(player) {
+    		assassin.insert(player.value)
+		    })
+	      }, true);
+
+       csv.parseCSV("public/data/teams.csv", function(data){
+	    data.forEach(function(team) {
+		    assassin.insert(team.value)
+			})
+		}, true);
+       response.send('data loading');
+    });
+      
 
 // start server on the specified port and binding host
 var server = app.listen(appEnv.port, '0.0.0.0', function() {

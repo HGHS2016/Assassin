@@ -9,8 +9,9 @@
 		"express": "4.13.x",
 		"cfenv": "1.0.x",
 		"nano" : "*",
-        "jade" : ">=1.1.4",
-		"pug"  : "*"
+                "jade" : ">=1.1.4",
+		"pug"  : "*",
+                "csv-array" : "*"
 	},
 	"repository": {},
 	"engines": {
