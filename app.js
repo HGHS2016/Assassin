@@ -88,6 +88,8 @@ app.get('/teamlist', function(request, response) {
     		response.send(JSON.stringify(teams));
     	}
     });
+});
+
     
 /* app.get('/teamlist', function(request,response) {
     var teams = []; 
@@ -108,7 +110,3 @@ var server = app.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
 	console.log("server starting on port %d on host %s url %s ", server.address().port, appEnv.bind, appEnv.url);
 });
-
-process.on('exit', function() {
-	console.log('Server is shutting down!');
-    });
