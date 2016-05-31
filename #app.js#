@@ -6,7 +6,6 @@
 
 var express = require('express');
 var app = express();
-
 //var http = require('http')
 
 //var host = "localhost"
@@ -19,7 +18,6 @@ var cloudant = {
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
-var csv = require('csv-array');
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
@@ -31,7 +29,10 @@ if (!appEnv.isLocal) {
 }
 
 var nano = require('nano')(cloudant.url);
-var assassin = nano.db.use('assassin');
+var db = nano.db.use('assassin');
+
+// serve the files out of ./public as our main files
+app.use(express.static(__dirname + '/public'));
 
 // Set path to JavaScript files
 app.set('js', __dirname + '/js');
@@ -42,15 +43,9 @@ app.set('images', __dirname + '/images');
 // Set path to Jade template directory
 app.set('views', __dirname + '/views');
 
-// Set path to Jade template directory
-app.set('data', __dirname + '/data');
-
-// serve the files out of ./public as our main files
-app.use(express.static(__dirname + '/public'));
-
 // Bind the root '/' URL to the login page
 app.get('/', function(req, res){
-  res.render('welcome.jade', {title: "LET'S PLAY ASSASSINS"});
+  res.render('gods.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
 // Bind the root '/' URL to the login page
@@ -58,12 +53,12 @@ app.get('/login', function(req, res){
   res.render('login.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
-app.get('/signup', function(req, res){
-  res.render('signup.jade', {title: "Sign Up!"});
+app.get('/targit', function(req, res){
+  res.render('target.jade', {title: "LET'S GO ASSASSINS"});
 });
 
-app.get('/create', function(req, res){
-  res.render('create.jade', {title: "Make a Game!"});
+app.get('/goddy', function(req, res){
+  res.render('gods.jade', {title: "LET'S GO GODS"});
 });
 
 app.get('/playerlist', function(request, response) {
@@ -72,7 +67,7 @@ app.get('/playerlist', function(request, response) {
         players.push({"name": "Pineapple Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
       response.send(JSON.stringify(players));
       */
-    assassin.view('players', 'players-index', function(err, body) {
+    db.view('players', 'players-index', function(err, body) {
     	if(!err) {
     		var players = [];
     		body.rows.forEach(function(doc) {
@@ -84,7 +79,7 @@ app.get('/playerlist', function(request, response) {
 }); 
 
 app.get('/teamlist', function(request, response) {
-    assassin.view('teams', 'teams-index', function(err, body) {
+    db.view('teams', 'teams-index', function(err, body) {
     	if(!err) {
     		var teams = [];
     		body.rows.forEach(function(doc) {
@@ -93,7 +88,13 @@ app.get('/teamlist', function(request, response) {
     		response.send(JSON.stringify(teams));
     	}
     });
-});
+    
+/* app.get('/teamlist', function(request,response) {
+    var teams = []; 
+    teams.push({"teamName": "t1", "player1": "Hanzhi Zou", "player2": "Gangrene", "target": "t2"});
+    teams.push({"teamName": "t2", "player1": "Rebecca Dummit", "player2": "Noah Kessler", "target": "t1"});
+    response.send(JSON.stringify(teams));
+}); */
 
 app.get('/targetlist', function(request,response) {
     var targets = []; 
@@ -102,42 +103,12 @@ app.get('/targetlist', function(request,response) {
     response.send(JSON.stringify(targets));
 });
 
-
-//app.get('/initdata', function(request,response) {
-    /* stub for really dropping and recreating the database. for now we'll just load
-       nano.db.destroy('assassin', function(err) {
-       if (!err) {
-	   nano.db.create('assassin', function(err) {
-		   if (!err) {
-		       assassin = nano.db.use('assassin'); }})}})
-    */
-/*
-       csv.parseCSV("public/data/players.csv", function(data){
-  	  data.forEach(function(player) {
-                  var id = player.first.substr(0,2).concat(player.last).toLowerCase();
-	          assassin.insert(player, id, function(err, body, header) {
-			  if (err) 
-			      { return console.log('[assassin.insert] ', err.message) };
-			  console.log('You have inserted the player.');
-                          console.log(body);
-		      })
-		      })}, true);
-
-       csv.parseCSV("public/data/teams.csv", function(data){
-  	  data.forEach(function(team) {
-                  assassin.insert(team, team.name, function(err, body, header) {
-			  if (err) 
-			      { return console.log('[assassin.insert] ', err.message) };
-			  console.log('You have inserted the team.');
-                          console.log(body);
-		      })
-	      })}, true);
-       response.send('data loading');
-    });
-*/      
-
 // start server on the specified port and binding host
 var server = app.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
 	console.log("server starting on port %d on host %s url %s ", server.address().port, appEnv.bind, appEnv.url);
 });
+
+process.on('exit', function() {
+	console.log('Server is shutting down!');
+    });

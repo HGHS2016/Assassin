@@ -1,16 +1,24 @@
 doctype html
 html(lang='en')
   head
-    title Log In
+    title Sign Up
   link(rel='stylesheet', href='stylesheets/bootstrap.css', type='text/css')
   link(rel='stylesheet', href='stylesheets/style.css', type='text/css')
   body
-    h1 Log In
+    h1 Sign Up
     form(action = "/home")
+      p First Name:
+      input(type = "text" name = "first")
+      p Last Name:
+      input(type = "text" name = "last")
       p Username: 
       input(type = "text" name = "user")
       p Password: 
       input(type = "password" name = "pass")
+      p Re-Enter Password: 
+      input(type = "password" name = "pass2")
+      p Organization Code
+      input(type = "text" name = "org")
       p 
-      input(type = "submit" value = "Log In")
+      input(type = "submit" value = "Sign Up")
     
