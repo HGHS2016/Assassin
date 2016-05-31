@@ -152,7 +152,9 @@ app.get('/welcomehome', function(request, response) {
 	console.log("THIS IS THE LOG FOR THE REQUEST: " + request.param('user'));
 	assassin.get(request.param('user'), function(err, body) {
 		if(!err) {
-			console.log("THIS IS THE BODY: " + body);
+			//body.rows.forEach(function(row) {
+				//if()
+			//});
 		}
 	});
 	response.send("Hi");
