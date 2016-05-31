@@ -12,7 +12,7 @@ var app = express();
 //var host = "localhost"
 //var port = 3030;
 
-var cloudant = {
+var cloudanturl = {
   url:"https://edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix:6d0fd78d822e7fa111e98b26c317ebddb5464fecf17d2731d7a0bb50ddd01c7b@edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix.cloudant.com"	 		 
 };
 
@@ -27,11 +27,11 @@ var appEnv = cfenv.getAppEnv();
 // Parse out Cloudant settings
 
 if (!appEnv.isLocal) {
-   cloudant = appEnv.getServiceCreds(/Cloudant/);
+   cloudanturl = appEnv.getServiceCreds(/Cloudant/);
 }
 
-var nano = require('nano')(cloudant.url);
-var assassin = nano.db.use('assassin');
+var cloudant = require('cloudant')(cloudanturl.url);
+var assassin = cloudant.db.use('assassin');
 
 // Set path to JavaScript files
 app.set('js', __dirname + '/js');
@@ -72,7 +72,7 @@ app.get('/playerlist', function(request, response) {
         players.push({"name": "Pineapple Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
       response.send(JSON.stringify(players));
       */
-    assassin.view('players', 'players-index', function(err, body) {
+	assassin.view('players', 'players-index', function(err, body) {
     	if(!err) {
     		var players = [];
     		body.rows.forEach(function(doc) {
@@ -83,17 +83,55 @@ app.get('/playerlist', function(request, response) {
     });
 }); 
 
-app.get('/teamlist', function(request, response) {
-    assassin.view('teams', 'teams-index', function(err, body) {
-    	if(!err) {
-    		var teams = [];
-    		body.rows.forEach(function(doc) {
-    			teams.push(doc.value);
-    		});
-    		response.send(JSON.stringify(teams));
-    	}
+app.get('/learn', function(request, response) {
+	var opts = {};
+        opts.db = "assassin"; 
+        opts.method = "get";
+        opts.path 
+    
+	assassin.get('jobass', function(err,body) {
+		if (!err) {
+		    console.log(body);
+		}});
+ 	response.send("Hello");
     });
-});
+
+function getPlayerName(docid) {
+	assassin.get(docid, function(err,body) {
+		if (!err) {
+		    console.log(body);
+                    var player = body.first.concat(' ').concat(body.last);
+                    console.log("insidegetplayername " + player);
+                    return player;
+		}})};
+
+
+app.get('/teamlist', function(request, response) {
+	assassin.view('team', 'team-index', {include_docs: true},  function(err, body) {
+		if(!err) {
+		    var teams = [];
+		    var curteam = body.rows[0].key.team;
+		    var teamrow = {};
+		    teamrow.name = curteam;
+		    body.rows.forEach(function(row) {
+			    if (curteam != row.key.team) {
+				teams.push(teamrow);
+				curteam = row.key.team;
+				teamrow = {};
+				teamrow.name = curteam;
+			    };
+			    if (row.key.field == 'player1')
+				teamrow.player1 = row.doc.first.concat(' ').concat(row.doc.last);
+			    if (row.key.field == 'player2')
+				teamrow.player2 = row.doc.first.concat(' ').concat(row.doc.last);
+			    if (row.key.field == 'target')
+				teamrow.target = row.doc.name; 
+			});
+		    teams.push(teamrow);
+		    response.send(JSON.stringify(teams));
+		}
+	    });
+    });
 
 app.get('/targetlist', function(request,response) {
     var targets = []; 
@@ -105,11 +143,11 @@ app.get('/targetlist', function(request,response) {
 
 //app.get('/initdata', function(request,response) {
     /* stub for really dropping and recreating the database. for now we'll just load
-       nano.db.destroy('assassin', function(err) {
+       cloudant.db.destroy('assassin', function(err) {
        if (!err) {
-	   nano.db.create('assassin', function(err) {
+	   cloudant.db.create('assassin', function(err) {
 		   if (!err) {
-		       assassin = nano.db.use('assassin'); }})}})
+		       assassin = cloudant.db.use('assassin'); }})}})
     */
 /*
        csv.parseCSV("public/data/players.csv", function(data){
