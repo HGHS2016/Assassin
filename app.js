@@ -144,6 +144,16 @@ app.get('/targetlist', function(request,response) {
     response.send(JSON.stringify(targets));
 });
 
+app.get('/welcomehome', function(request, response) {
+	console.log("THIS IS THE LOG FOR THE REQUEST: " + request.param('user'));
+	assassin.get(request.param('user'), function(err, body) {
+		if(!err) {
+			console.log("THIS IS THE BODY: " + body);
+		}
+	});
+	response.send("Hi");
+});
+
 
 //app.get('/initdata', function(request,response) {
     /* stub for really dropping and recreating the database. for now we'll just load
