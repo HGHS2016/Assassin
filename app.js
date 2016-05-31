@@ -53,6 +53,10 @@ app.get('/', function(req, res){
   res.render('welcome.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
+app.get('/home', function(req, res){
+	res.render('home.jade', {title: "HOME"});
+});
+
 // Bind the root '/' URL to the login page
 app.get('/login', function(req, res){
   res.render('login.jade', {title: "LET'S PLAY ASSASSINS"});
