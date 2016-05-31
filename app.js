@@ -66,9 +66,13 @@ app.get('/create', function(req, res){
   res.render('create.jade', {title: "Make a Game!"});
 });
 
+app.get('/gods', function(req, res){
+  res.render('gods.jade', {title: "gods view!"});
+});
+
 app.get('/playerlist', function(request, response) {
    /* var players = [];
-        players.push({"name": "Hanzhi Zou", "role": "God", "id": "gangrene"});		
+'characters/all',        players.push({"name": "Hanzhi Zou", "role": "God", "id": "gangrene"});		
         players.push({"name": "Pineapple Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
       response.send(JSON.stringify(players));
       */
