@@ -50,7 +50,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Bind the root '/' URL to the login page
 app.get('/', function(req, res){
-  res.render('gods.jade', {title: "LET'S PLAY ASSASSINS"});
+  res.render('welcome.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
 // Bind the root '/' URL to the login page
@@ -58,12 +58,12 @@ app.get('/login', function(req, res){
   res.render('login.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
-app.get('/targit', function(req, res){
-  res.render('target.jade', {title: "LET'S GO ASSASSINS"});
+app.get('/signup', function(req, res){
+  res.render('signup.jade', {title: "Sign Up!"});
 });
 
-app.get('/goddy', function(req, res){
-  res.render('gods.jade', {title: "LET'S GO GODS"});
+app.get('/create', function(req, res){
+  res.render('create.jade', {title: "Make a Game!"});
 });
 
 app.get('/playerlist', function(request, response) {
