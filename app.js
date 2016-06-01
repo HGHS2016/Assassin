@@ -144,7 +144,7 @@ app.get('/targetlist', function(request,response) {
     response.send(JSON.stringify(targets));
 });
 
-app.get('/welcomehome', function(request, response) {
+app.get('/loggingin', function(request, response) {
 	assassin.get(request.param('user'), function(err, body) {
 		if(!err) {
 			console.log("THIS IS THE BODY: " + JSON.stringify(body));
@@ -160,6 +160,28 @@ app.get('/welcomehome', function(request, response) {
 		}
 	});
 	//response.send("Hi");
+});
+
+app.get('/signingup', function(request, response) {
+	if(request.param('pass') != request.param('pass2')) {
+		response.redirect("/signup");
+	}
+	else {
+		//might be unnecessary if the insert function already checks for same id
+		assassin.get(request.param('user'), function(err, body) {
+			console.log("THIS IS THE INPUTED USERNAME: " + request.param('user'));
+			console.log("THIS IS THE DOC FOR THE USER: " + JSON.stringify(body));
+			if(err) {
+				var id = request.param('user');
+				assassin.insert({type:"player", first:request.param('first'), last:request.param('last'), role:"assassin", status:"alive"}, id, function(err, body, header) {
+					response.send("Player Created...");
+				});
+			}
+			else {
+				response.send("Username already taken");
+			}
+		});
+	}
 });
 
 
