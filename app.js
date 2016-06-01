@@ -167,18 +167,13 @@ app.get('/signingup', function(request, response) {
 		response.redirect("/signup");
 	}
 	else {
-		//might be unnecessary if the insert function already checks for same id
-		assassin.get(request.param('user'), function(err, body) {
-			console.log("THIS IS THE INPUTED USERNAME: " + request.param('user'));
-			console.log("THIS IS THE DOC FOR THE USER: " + JSON.stringify(body));
-			if(err) {
-				var id = request.param('user');
-				assassin.insert({type:"player", first:request.param('first'), last:request.param('last'), role:"assassin", status:"alive"}, id, function(err, body, header) {
-					response.send("Player Created...");
-				});
+		var id = request.param('user');
+		assassin.insert({type:"player", first:request.param('first'), last:request.param('last'), role:"assassin", status:"alive"}, id, function(err, body, header) {
+			if(!err) {
+				response.redirect("/home");
 			}
 			else {
-				response.send("Username already taken");
+				response.send("Some error while accessing database, may be invalid username");
 			}
 		});
 	}
