@@ -18,9 +18,9 @@ html(lang='en')
       form(action = "/welcome" method = "get")
         p DeceasedID: 
         input(type = "text" name = "user")
-    p Click the button to record your coordinates.
-        button(onclick='getLocation()') Get My Location
-        p#demo
+    p.center Click the button to record your coordinates. 
+        button(onclick='getLocation()' class="blue-grey") Get My Location
+        p.center#demo
         script.
           var x = document.getElementById("demo");
           function getLocation() {
@@ -34,6 +34,6 @@ html(lang='en')
           x.innerHTML = "Latitude: " + position.coords.latitude +
           "<br>Longitude: " + position.coords.longitude;
           }
-      form(action = "/welcome" method = "get")
-        p 
+      form(action = "/welcome" method = "get" class = "center")
+        p
         input(type = "submit" value = "Log" class="blue-grey")
