@@ -76,6 +76,10 @@ app.get('/god', function(req, res){
   res.render('god.jade', {title: "gods view!"});
 });
 
+app.get('/kill', function(req, res){
+  res.render('kill.jade', {title: "LET'S KILL"});
+});
+
 app.get('/playerlist', function(request, response) {
 //<<<<<<< HEAD
    /* var players = [];
