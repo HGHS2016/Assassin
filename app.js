@@ -149,15 +149,21 @@ app.get('/targetlist', function(request,response) {
 });
 
 app.get('/welcomehome', function(request, response) {
-	console.log("THIS IS THE LOG FOR THE REQUEST: " + request.param('user'));
 	assassin.get(request.param('user'), function(err, body) {
 		if(!err) {
-			//body.rows.forEach(function(row) {
-				//if()
-			//});
+			console.log("THIS IS THE BODY: " + JSON.stringify(body));
+			if(body.role == "god") {
+				response.redirect("/god");
+			}
+			else if(body.role == "assassin") {
+				response.redirect("/home");
+			}
+		}
+		else {
+			response.redirect("/login");
 		}
 	});
-	response.send("Hi");
+	//response.send("Hi");
 });
 
 
