@@ -109,7 +109,6 @@ app.get('/learn', function(request, response) {
  	response.send("Hello");
     });
 
-
 app.get('/teamlist', function(request, response) {
 	assassin.view('team', 'team-index', {include_docs: true},  function(err, body) {
 		if(!err) {
