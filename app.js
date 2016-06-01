@@ -19,7 +19,6 @@ var cloudanturl = {
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
-var csv = require('csv-array');
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
@@ -71,11 +70,6 @@ app.get('/gods', function(req, res){
 });
 
 app.get('/playerlist', function(request, response) {
-   /* var players = [];
-'characters/all',        players.push({"name": "Hanzhi Zou", "role": "God", "id": "gangrene"});		
-        players.push({"name": "Pineapple Joe", "role": "Player", "id": "iluvfruit98095843141234234"});		      
-      response.send(JSON.stringify(players));
-      */
 	assassin.view('players', 'players-index', function(err, body) {
     	if(!err) {
     		var players = [];
@@ -99,15 +93,6 @@ app.get('/learn', function(request, response) {
 		}});
  	response.send("Hello");
     });
-
-function getPlayerName(docid) {
-	assassin.get(docid, function(err,body) {
-		if (!err) {
-		    console.log(body);
-                    var player = body.first.concat(' ').concat(body.last);
-                    console.log("insidegetplayername " + player);
-                    return player;
-		}})};
 
 
 app.get('/teamlist', function(request, response) {
@@ -145,38 +130,12 @@ app.get('/targetlist', function(request,response) {
 });
 
 
-//app.get('/initdata', function(request,response) {
-    /* stub for really dropping and recreating the database. for now we'll just load
-       cloudant.db.destroy('assassin', function(err) {
-       if (!err) {
-	   cloudant.db.create('assassin', function(err) {
-		   if (!err) {
-		       assassin = cloudant.db.use('assassin'); }})}})
-    */
-/*
-       csv.parseCSV("public/data/players.csv", function(data){
-  	  data.forEach(function(player) {
-                  var id = player.first.substr(0,2).concat(player.last).toLowerCase();
-	          assassin.insert(player, id, function(err, body, header) {
-			  if (err) 
-			      { return console.log('[assassin.insert] ', err.message) };
-			  console.log('You have inserted the player.');
-                          console.log(body);
-		      })
-		      })}, true);
-
-       csv.parseCSV("public/data/teams.csv", function(data){
-  	  data.forEach(function(team) {
-                  assassin.insert(team, team.name, function(err, body, header) {
-			  if (err) 
-			      { return console.log('[assassin.insert] ', err.message) };
-			  console.log('You have inserted the team.');
-                          console.log(body);
-		      })
-	      })}, true);
-       response.send('data loading');
+app.get('/initdata', function(request,response) {
+    var initialize = require('./public/js/cloudantinit.js');
+    initialize.loaddata(cloudant);
+    response.send('data loading');
     });
-*/      
+
 
 // start server on the specified port and binding host
 var server = app.listen(appEnv.port, '0.0.0.0', function() {
