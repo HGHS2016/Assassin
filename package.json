@@ -2,6 +2,7 @@
 	"name": "NodejsStarterApp",
 	"version": "0.0.1",
 	"private": true,
+	"memory" : "1GB"
 	"scripts": {
 		"start": "node app.js"
 	},
