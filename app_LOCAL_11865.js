@@ -13,12 +13,13 @@ var app = express();
 //var port = 3030;
 
 var cloudanturl = {
-  url:"https://edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix:6d0fd78d822e7fa111e98b26c317ebddb5464fecf17d2731d7a0bb50ddd01c7b@edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix.cloudant.com"	 		 
+  url:"https://edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix:6d0fd78d822e7fa111e98b26c317ebddb5464fecf17d2731d7a0bb50ddd01c7b@edbede34-5fac-45c8-a2a9-a066bb3d6000-bluemix.cloudant.com"
 };
 
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
+var csv = require('csv-array');
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
@@ -43,6 +44,9 @@ app.set('views', __dirname + '/views');
 
 // Set path to Jade template directory
 app.set('data', __dirname + '/data');
+
+// Set path to Font directory
+app.set('fonts', __dirname + '/fonts');
 
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
@@ -74,6 +78,11 @@ app.get('/gods', function(req, res){
 });
 
 app.get('/playerlist', function(request, response) {
+   /* var players = [];
+'characters/all',        players.push({"name": "Hanzhi Zou", "role": "God", "id": "gangrene"});
+        players.push({"name": "Pineapple Joe", "role": "Player", "id": "iluvfruit98095843141234234"});
+      response.send(JSON.stringify(players));
+      */
 	assassin.view('players', 'players-index', function(err, body) {
     	if(!err) {
     		var players = [];
@@ -83,20 +92,29 @@ app.get('/playerlist', function(request, response) {
     		response.send(JSON.stringify(players));
     	}
     });
-}); 
+});
 
 app.get('/learn', function(request, response) {
 	var opts = {};
-        opts.db = "assassin"; 
+        opts.db = "assassin";
         opts.method = "get";
-        opts.path 
-    
+        opts.path
+
 	assassin.get('jobass', function(err,body) {
 		if (!err) {
 		    console.log(body);
 		}});
  	response.send("Hello");
     });
+
+function getPlayerName(docid) {
+	assassin.get(docid, function(err,body) {
+		if (!err) {
+		    console.log(body);
+                    var player = body.first.concat(' ').concat(body.last);
+                    console.log("insidegetplayername " + player);
+                    return player;
+		}})};
 
 
 app.get('/teamlist', function(request, response) {
@@ -118,7 +136,7 @@ app.get('/teamlist', function(request, response) {
 			    if (row.key.field == 'player2')
 				teamrow.player2 = row.doc.first.concat(' ').concat(row.doc.last);
 			    if (row.key.field == 'target')
-				teamrow.target = row.doc.name; 
+				teamrow.target = row.doc.name;
 			});
 		    teams.push(teamrow);
 		    response.send(JSON.stringify(teams));
@@ -127,7 +145,7 @@ app.get('/teamlist', function(request, response) {
     });
 
 app.get('/targetlist', function(request,response) {
-    var targets = []; 
+    var targets = [];
     targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
     targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
     response.send(JSON.stringify(targets));
@@ -146,12 +164,38 @@ app.get('/welcomehome', function(request, response) {
 });
 
 
-app.get('/initdata', function(request,response) {
-    var initialize = require('./public/js/cloudantinit.js');
-    initialize.loaddata(cloudant);
-    response.send('data loading');
-    });
+//app.get('/initdata', function(request,response) {
+    /* stub for really dropping and recreating the database. for now we'll just load
+       cloudant.db.destroy('assassin', function(err) {
+       if (!err) {
+	   cloudant.db.create('assassin', function(err) {
+		   if (!err) {
+		       assassin = cloudant.db.use('assassin'); }})}})
+    */
+/*
+       csv.parseCSV("public/data/players.csv", function(data){
+  	  data.forEach(function(player) {
+                  var id = player.first.substr(0,2).concat(player.last).toLowerCase();
+	          assassin.insert(player, id, function(err, body, header) {
+			  if (err)
+			      { return console.log('[assassin.insert] ', err.message) };
+			  console.log('You have inserted the player.');
+                          console.log(body);
+		      })
+		      })}, true);
 
+       csv.parseCSV("public/data/teams.csv", function(data){
+  	  data.forEach(function(team) {
+                  assassin.insert(team, team.name, function(err, body, header) {
+			  if (err)
+			      { return console.log('[assassin.insert] ', err.message) };
+			  console.log('You have inserted the team.');
+                          console.log(body);
+		      })
+	      })}, true);
+       response.send('data loading');
+    });
+*/
 
 // start server on the specified port and binding host
 var server = app.listen(appEnv.port, '0.0.0.0', function() {
