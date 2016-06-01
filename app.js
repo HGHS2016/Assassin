@@ -72,19 +72,19 @@ app.get('/create', function(req, res){
   res.render('create.jade', {title: "Make a Game!"});
 });
 
-app.get('/gods', function(req, res){
-  res.render('gods.jade', {title: "gods view!"});
+app.get('/god', function(req, res){
+  res.render('god.jade', {title: "gods view!"});
 });
 
 app.get('/playerlist', function(request, response) {
-<<<<<<< HEAD
+//<<<<<<< HEAD
    /* var players = [];
 'characters/all',        players.push({"name": "Hanzhi Zou", "role": "God", "id": "gangrene"});
         players.push({"name": "Pineapple Joe", "role": "Player", "id": "iluvfruit98095843141234234"});
       response.send(JSON.stringify(players));
       */
-=======
->>>>>>> 8a8b8e3a6d04bb35d6cc5477682ba44d20b1bce3
+//=======
+//>>>>>>> 8a8b8e3a6d04bb35d6cc5477682ba44d20b1bce3
 	assassin.view('players', 'players-index', function(err, body) {
     	if(!err) {
     		var players = [];
@@ -157,7 +157,7 @@ app.get('/welcomehome', function(request, response) {
 });
 
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //app.get('/initdata', function(request,response) {
     /* stub for really dropping and recreating the database. for now we'll just load
        cloudant.db.destroy('assassin', function(err) {
@@ -190,14 +190,14 @@ app.get('/welcomehome', function(request, response) {
        response.send('data loading');
     });
 */
-=======
+//=======
 app.get('/initdata', function(request,response) {
     var initialize = require('./public/js/cloudantinit.js');
     initialize.loaddata(cloudant);
     response.send('data loading');
     });
 
->>>>>>> 8a8b8e3a6d04bb35d6cc5477682ba44d20b1bce3
+//>>>>>>> 8a8b8e3a6d04bb35d6cc5477682ba44d20b1bce3
 
 // start server on the specified port and binding host
 var server = app.listen(appEnv.port, '0.0.0.0', function() {
