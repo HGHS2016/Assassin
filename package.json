@@ -2,6 +2,7 @@
 	"name": "NodejsStarterApp",
 	"version": "0.0.1",
 	"private": true,
+	"memory" : 1024M
 	"scripts": {
 		"start": "node app.js"
 	},
@@ -16,5 +17,5 @@
 	"repository": {},
 	"engines": {
 		"node": "4.x"
-	} 
+	}
 }
