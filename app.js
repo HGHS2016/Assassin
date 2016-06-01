@@ -52,6 +52,10 @@ app.get('/', function(req, res){
   res.render('welcome.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
+app.get('/home', function(req, res){
+	res.render('home.jade', {title: "HOME"});
+});
+
 // Bind the root '/' URL to the login page
 app.get('/login', function(req, res){
   res.render('login.jade', {title: "LET'S PLAY ASSASSINS"});
@@ -127,6 +131,18 @@ app.get('/targetlist', function(request,response) {
     targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
     targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
     response.send(JSON.stringify(targets));
+});
+
+app.get('/welcomehome', function(request, response) {
+	console.log("THIS IS THE LOG FOR THE REQUEST: " + request.param('user'));
+	assassin.get(request.param('user'), function(err, body) {
+		if(!err) {
+			//body.rows.forEach(function(row) {
+				//if()
+			//});
+		}
+	});
+	response.send("Hi");
 });
 
 
