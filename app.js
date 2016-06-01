@@ -64,8 +64,16 @@ app.get('/login', function(req, res){
   res.render('login.jade', {title: "LET'S PLAY ASSASSINS"});
 });
 
+app.get('/loginfailed', function(req, res){
+  res.render('loginfailed.jade', {title: "LET'S TRY TO LOGIN AGAIN"});
+});
+
 app.get('/signup', function(req, res){
   res.render('signup.jade', {title: "Sign Up!"});
+});
+
+app.get('/signupfailed', function(req, res){
+  res.render('signupfailed.jade', {title: "Sign Up Failed!"});
 });
 
 app.get('/create', function(req, res){
@@ -159,7 +167,7 @@ app.get('/loggingin', function(request, response) {
 			}
 		}
 		else {
-			response.redirect("/login");
+			response.redirect("/loginfailed");
 		}
 	});
 	//response.send("Hi");
@@ -167,7 +175,7 @@ app.get('/loggingin', function(request, response) {
 
 app.get('/signingup', function(request, response) {
 	if(request.param('pass') != request.param('pass2')) {
-		response.redirect("/signup");
+		response.redirect("/signupfailed");
 	}
 	else {
 		var id = request.param('user');
@@ -176,7 +184,7 @@ app.get('/signingup', function(request, response) {
 				response.redirect("/home");
 			}
 			else {
-				response.send("Some error while accessing database, may be invalid username");
+				response.redirect("/signupfailed");
 			}
 		});
 	}
