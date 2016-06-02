@@ -15,6 +15,8 @@ html(lang='en')
   body(class="blue-grey darken-3")
   
     h1.center Sign Up
+    - if(pageData.failed)
+      p.center (Your username may already be taken or your password confirmation may have failed)
     form(action = "/signingup")
       p First Name:
       input(type = "text" name = "first")

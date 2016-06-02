@@ -61,19 +61,19 @@ app.get('/home', function(req, res){
 
 // Bind the root '/' URL to the login page
 app.get('/login', function(req, res){
-  res.render('login.jade', {title: "LET'S PLAY ASSASSINS"});
+  res.render('login.jade', {pageData: {title: "LET'S PLAY ASSASSINS"}, failed: 'false'});
 });
 
 app.get('/loginfailed', function(req, res){
-  res.render('login.jade', {title: "LET'S TRY TO LOGIN AGAIN", failed: 'true'});
+  res.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", failed: 'true'}});
 });
 
 app.get('/signup', function(req, res){
-  res.render('signup.jade', {title: "Sign Up!"});
+  res.render('signup.jade', {pageData: {title: "Sign Up!", failed: false}});
 });
 
 app.get('/signupfailed', function(req, res){
-  res.render('signupfailed.jade', {pageData: {title: "Sign Up Failed!", failed: true}});
+  res.render('signup.jade', {pageData: {title: "Sign Up Failed!", failed: true}});
 });
 
 app.get('/create', function(req, res){

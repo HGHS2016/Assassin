@@ -14,7 +14,7 @@ html(lang='en')
 	body(class="blue-grey darken-3")     
 		div.container
 			h1.center Log In
-			- if(failed)
+			- if(pageData.failed)
 				p.center (Your username or password may be incorrect)
 			form(action = "/loggingin" method = "get")
 				p Username: 
