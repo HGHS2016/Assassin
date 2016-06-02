@@ -11,9 +11,9 @@ html(lang='en')
         p DeceasedID: 
         input(type = "text" name = "user")
     p.center Click the button to record your coordinates. 
-        button(onclick='getLocation()' class="blue-grey") Get My Location
+        button(onclick='getLocation(function(location) { console.log('hi'); })' class="blue-grey") Get My Location
         p.center#demo
         script(type="text/javascript", src="js/geolocate.js")
-      form(action = "/" method = "get" class = "center")
+      form(action = "/sendingkill" method = "get" class = "center")
         p
         input(type = "submit" value = "Log" class="blue-grey")
