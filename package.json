@@ -1,20 +1,21 @@
 {
-	"name": "NodejsStarterApp",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node app.js"
-	},
-	"dependencies": {
-		"express": "4.13.x",
-		"cfenv": "1.0.x",
-		"cloudant" : "*",
-                "jade" : ">=1.1.4",
-		"pug"  : "*",
-                "csv-array" : "*"
-	},
-	"repository": {},
-	"engines": {
-		"node": "4.x"
-	} 
+    "name": "NodejsStarterApp",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+	"start": "node app.js"
+    },
+    "dependencies": {
+	"express": "4.13.x",
+	"cfenv": "1.0.x",
+	"cloudant" : "*",
+        "jade" : ">=1.1.4",
+	"pug"  : "*",
+        "csv-array" : "*",
+	"hashmap" : "*"
+    },
+    "repository": {},
+    "engines": {
+	"node": "4.x"
+    } 
 }

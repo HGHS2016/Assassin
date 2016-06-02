@@ -32,6 +32,8 @@ if (!appEnv.isLocal) {
 var cloudant = require('cloudant')(cloudanturl.url);
 var assassin = cloudant.db.use('assassin');
 
+var datamodule = require('./public/js/cloudantinit.js');
+
 // Set path to JavaScript files
 app.set('js', __dirname + '/js');
 
@@ -85,8 +87,8 @@ app.get('/playerlist', function(request, response) {
       */
 //=======
 //>>>>>>> 8a8b8e3a6d04bb35d6cc5477682ba44d20b1bce3
-	assassin.view('players', 'players-index', function(err, body) {
-    	if(!err) {
+    assassin.view('players', 'players-index',  function(err, body) {
+    	    if(!err) {
     		var players = [];
     		body.rows.forEach(function(doc) {
     			players.push(doc.value);
@@ -96,18 +98,35 @@ app.get('/playerlist', function(request, response) {
     });
 });
 
-app.get('/learn', function(request, response) {
-	var opts = {};
-        opts.db = "assassin";
-        opts.method = "get";
-        opts.path
-
-	assassin.get('jobass', function(err,body) {
-		if (!err) {
-		    console.log(body);
-		}});
- 	response.send("Hello");
+app.get('/badkill', function(request, response) {
+    var opts = {};
+    opts.db = "assassin";
+    opts.method = "get";
+    opts.content_type = "json";
+    opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-73.757322+41.174823)&include_docs=true";
+    cloudant.request(opts, function(err,body) {
+	if (err) {
+	    console.log("[badkill, cloudant error" + JSON.stringify(err));
+	    return; 
+	}
+ 	response.send(JSON.stringify(body.rows));
     });
+});
+
+app.get('/goodkill', function(request, response) {
+    var opts = {};
+    opts.db = "assassin";
+    opts.method = "get";
+    opts.content_type = "json";
+    opts.path = "_design/location/_geo/newGeoIndex?g=point(10+10)&include_docs=true";
+    cloudant.request(opts, function(err,body) {
+	if (err) {
+	    console.log("[goodkill, cloudant error" + JSON.stringify(err));
+	    return; 
+	}
+ 	response.send(JSON.stringify(body.rows));
+    });
+});
 
 
 app.get('/teamlist', function(request, response) {
@@ -138,11 +157,15 @@ app.get('/teamlist', function(request, response) {
     });
 
 app.get('/targetlist', function(request,response) {
-    var targets = [];
-    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
-    targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
-    response.send(JSON.stringify(targets));
+    datamodule.computetargets(cloudant, function (teams) {
+	response.send(JSON.stringify(teams));
+    });
 });
+
+//    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
+//    targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
+
+
 
 app.get('/welcomehome', function(request, response) {
 	console.log("THIS IS THE LOG FOR THE REQUEST: " + request.param('user'));
@@ -192,10 +215,9 @@ app.get('/welcomehome', function(request, response) {
 */
 //=======
 app.get('/initdata', function(request,response) {
-    var initialize = require('./public/js/cloudantinit.js');
-    initialize.loaddata(cloudant);
-    response.send('data loading');
-    });
+    datamodule.loaddata(cloudant, function() {
+	response.send('data loading');})
+});
 
 //>>>>>>> 8a8b8e3a6d04bb35d6cc5477682ba44d20b1bce3
 

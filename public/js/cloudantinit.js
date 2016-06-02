@@ -1,9 +1,79 @@
 module.exports.loaddata = reinitdata
+module.exports.computetargets = computetargets
 
 var csv = require('csv-array');
+var HashMap = require('hashmap');
 
 var local; 
 var assassin;
+
+function computetargets(cloudant, callback) {
+    local = cloudant;
+    assassin = local.db.use('assassin');
+    assassin.view('team', 'team-index', {include_docs: true}, function(err, body) {
+	if(err) return err;
+	teams = afterteam(err, body);
+	callback(teams);
+    });
+}
+
+function initteamrow(curteam) {
+    var teamrow = {};
+    teamrow.name = curteam;
+    teamrow.player1 = {};
+    teamrow.player2 = {}
+    teamrow.target = {};
+    return teamrow;
+}
+
+function computeteamstatus(team) {
+    if (team.player1.status != 'alive' && team.player2.status != 'alive')
+	team.status = 'dead';
+    else team.status = 'alive';
+    if (team.name == "grape" || team.name == "cantalope") team.status = 'dead';
+}
+
+function afterteam(err, body) {
+    if (err) return err;   
+    var teams = new HashMap();
+    var curtarget;
+    var curteam = body.rows[0].key.team;
+    var teamrow = initteamrow(curteam);
+    body.rows.forEach(function(row) {
+	if (curteam != row.key.team) {
+	    computeteamstatus(teamrow);
+	    teams.set(teamrow.name, teamrow);
+	    curteam = row.key.team;
+	    teamrow = initteamrow(curteam);
+	};
+	if (row.key.field == 'player1') {
+	    teamrow.player1.name = row.doc.first.concat(' ').concat(row.doc.last);
+	    teamrow.player1.status = row.doc.status;
+	};
+	
+	if (row.key.field == 'player2') {
+	    teamrow.player2 = row.doc.first.concat(' ').concat(row.doc.last);
+	    teamrow.player2.status = row.doc.status;
+	};
+	
+	if (row.key.field == 'target') {
+	    teamrow.target.original = row.doc.name;
+	    teamrow.target.current =  row.doc.name;
+	};
+    });
+    computeteamstatus(teamrow);
+    teams.set(teamrow.name, teamrow);
+    teams.forEach(function(team) {
+	curtarget = teams.get(team.target.current);
+	console.log(JSON.stringify(curtarget));
+	while (curtarget.status == 'dead' && curtarget != team) {
+	    team.target.current = curtarget.target.current
+	    curtarget = teams.get(team.target.current);
+	}
+    });
+    console.log(JSON.stringify(teams));
+    return teams;
+}
 
 function reinitdata(cloudant) {
     local = cloudant;
