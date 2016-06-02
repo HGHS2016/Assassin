@@ -92,6 +92,11 @@ app.get('/kill', function(req, res){
   res.render('kill.jade', {title: "LET'S KILL"});
 });
 
+app.get('/sendingkill', function(req, res){
+  console.log(req.getLat());
+  res.send("Hello");
+});
+
 app.get('/playerlist', function(request, response) {
 //<<<<<<< HEAD
    /* var players = [];
