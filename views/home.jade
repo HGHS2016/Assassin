@@ -6,7 +6,21 @@ html(lang="en")
   body(class= bgColor)
     include ./templates/scripts
     script(type="text/javascript" src="js/homePage.js")
-    include ./templates/playerNav.jade
+    //Navbar
+    header
+      nav
+        div(class="nav-wrapper blue-grey lighten-1")
+          a(href="#" class="brand-logo") Assassins
+          a(href="#" data-activates="mobile-demo" class="button-collapse") 
+            i(class="material-icons") menu
+            ul(id="nav-mobile" class="right hide-on-med-and-down")
+              li
+                a(href="kill") Assassinate
+              li
+                a(href="/" class="waves-effect waves-dark btn") Logout
+            ul(class="side-nav" id="mobile-demo")
+              li
+                a(href="/" class="waves-effect waves-dark btn") Logout
     //body        
     div(class="row")
       div(class="col s12 m6")
@@ -16,6 +30,7 @@ html(lang="en")
             span(class="card-title") Info
             p Put Info like current target, remaining time and etc.
             p For the Gods provide things like notifications and Graphs 
+            iframe(src="http://free.timeanddate.com/countdown/i582ccqa/n179/cf12/cm0/cu4/ct3/cs1/ca2/cr1/ss0/cac000/cpc000/pct/tcfff/fs100/szw320/szh135/tatTime%20left%20to%20kill/tac000/tptTime%20since%20Event%20started%20in/tpc000/matyour%20target/mac000/mpc000/iso2016-06-06T00:00:00" allowTransparency="true" frameborder="0" width="135" height="69")
         //card 2 
         div(class="card blue darken-2")
           div(class="card-content white-text")
