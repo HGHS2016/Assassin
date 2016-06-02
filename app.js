@@ -167,12 +167,16 @@ app.get('/targetlist', function(request,response) {
 app.get('/loggingin', function(request, response) {
 	assassin.get(request.param('user'), function(err, body) {
 		if(!err) {
-			console.log("THIS IS THE BODY: " + JSON.stringify(body));
-			if(body.role == "god") {
-				response.redirect("/god");
+			if(body.password == request.param('pass')) {
+				if(body.role == "god") {
+					response.redirect("/god");
+				}
+				else if(body.role == "assassin") {
+					response.redirect("/home");
+				}
 			}
-			else if(body.role == "assassin") {
-				response.redirect("/home");
+			else {
+				response.redirect("/loginfailed");
 			}
 		}
 		else {
@@ -188,7 +192,15 @@ app.get('/signingup', function(request, response) {
 	}
 	else {
 		var id = request.param('user');
-		assassin.insert({type:"player", first:request.param('first'), last:request.param('last'), role:"assassin", status:"alive"}, id, function(err, body, header) {
+		var d1 = Math.floor(Math.random() * 10).toString();
+		var d2 = Math.floor(Math.random() * 10).toString();
+		var d3 = Math.floor(Math.random() * 10).toString();
+		var uid = d1.concat(d2, d3);
+		var possibleletters = "abcdefghijklmnopqrstuvwxyz";
+		for(var i = 0; i <= 2; i++) {
+			uid = possibleletters.charAt(Math.floor(Math.random() * 26)).concat(uid);
+		}
+		assassin.insert({password:request.param('pass'), uniqueid:uid, type:"player", first:request.param('first'), last:request.param('last'), role:"assassin", status:"alive"}, id, function(err, body, header) {
 			if(!err) {
 				response.redirect("/home");
 			}
