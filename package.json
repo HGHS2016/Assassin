@@ -2,7 +2,7 @@
 	"name": "NodejsStarterApp",
 	"version": "0.0.1",
 	"private": true,
-	"memory" : "1GB"
+	"memory" : "1GB",
 	"scripts": {
 		"start": "node app.js"
 	},
@@ -12,7 +12,8 @@
 		"cloudant" : "*",
                 "jade" : ">=1.1.4",
 		"pug"  : "*",
-                "csv-array" : "*"
+    "csv-array" : "*",
+		"moment" : "*"
 	},
 	"repository": {},
 	"engines": {
