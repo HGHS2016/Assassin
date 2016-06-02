@@ -7,13 +7,13 @@ var HashMap = require('hashmap');
 var local; 
 var assassin;
 
-function computetargets(cloudant, callback) {
+function computetargets(cloudant, response) {
     local = cloudant;
     assassin = local.db.use('assassin');
-    assassin.view('team', 'team-index', {include_docs: true}, function(err, body) {
+    assassin.view('team', 'team-index', {include_docs: true}, function returnfromcloudant(err, body) {
 	if(err) return err;
 	teams = afterteam(err, body);
-	callback(teams);
+	response.send(JSON.stringify(teams));
     });
 }
 

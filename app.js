@@ -169,9 +169,7 @@ app.get('/teamlist', function(request, response) {
 		});
 
 app.get('/targetlist', function(request,response) {
-    datamodule.computetargets(cloudant, function (teams) {
-	response.send(JSON.stringify(teams));
-    });
+    datamodule.computetargets(cloudant, response)
 });
 
 //    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
