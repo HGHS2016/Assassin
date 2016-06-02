@@ -6,31 +6,16 @@ html(lang="en")
   body(class= bgColor)
     include ./templates/scripts
     script(type="text/javascript" src="js/homePage.js")
-    //Navbar
-    header
-      nav
-        div(class="nav-wrapper blue-grey lighten-1")
-          a(href="#" class="brand-logo") Assassins
-          a(href="#" data-activates="mobile-demo" class="button-collapse") 
-            i(class="material-icons") menu
-            ul(id="nav-mobile" class="right hide-on-med-and-down")
-              li
-                a(href="kill") Assassinate
-              li
-                a(href="/" class="waves-effect waves-dark btn") Logout
-            ul(class="side-nav" id="mobile-demo")
-              li
-                a(href="/" class="waves-effect waves-dark btn") Logout
+    include ./templates/playerNav
     //body        
     div(class="row")
-      div(class="col s12 m6")
-        //card 1
+      div(class="col s12 m3 l3")
         div(class="card blue-grey darken-1")
           div(class="card-content white-text")
             span(class="card-title") Timer until Sunday
             p 
             iframe(src="http://free.timeanddate.com/countdown/i582ccqa/n179/cf12/cm0/cu4/ct3/cs1/ca2/cr1/ss0/cac000/cpc000/pct/tcfff/fs100/szw320/szh135/tatTime%20left%20to%20kill/tac000/tptTime%20since%20Event%20started%20in/tpc000/matyour%20target/mac000/mpc000/iso2016-06-06T00:00:00" allowTransparency="true" frameborder="0" width="135" height="69")
-        //card 2 
+      div(class="col s12 m3 l3")
         div(class="card blue darken-2")
           div(class="card-content white-text")
             span(class="card-title") Chat 
