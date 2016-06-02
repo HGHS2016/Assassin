@@ -65,7 +65,7 @@ app.get('/login', function(req, res){
 });
 
 app.get('/loginfailed', function(req, res){
-  res.render('loginfailed.jade', {title: "LET'S TRY TO LOGIN AGAIN"});
+  res.render('login.jade', {title: "LET'S TRY TO LOGIN AGAIN", failed: 'true'});
 });
 
 app.get('/signup', function(req, res){
@@ -73,7 +73,7 @@ app.get('/signup', function(req, res){
 });
 
 app.get('/signupfailed', function(req, res){
-  res.render('signupfailed.jade', {title: "Sign Up Failed!"});
+  res.render('signupfailed.jade', {pageData: {title: "Sign Up Failed!", failed: true}});
 });
 
 app.get('/create', function(req, res){
