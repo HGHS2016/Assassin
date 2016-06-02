@@ -84,6 +84,10 @@ app.get('/god', function(req, res){
   res.render('god.jade', {title: "gods view!"});
 });
 
+app.get('/god/createTeam', function(req, res){
+  res.render('createTeam.jade', {title: "Create a Team"});
+});
+
 app.get('/kill', function(req, res){
   res.render('kill.jade', {title: "LET'S KILL"});
 });

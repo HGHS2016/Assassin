@@ -11,19 +11,7 @@ html(lang='en')
     p.center Click the button to record your coordinates. 
         button(onclick='getLocation()' class="blue-grey") Get My Location
         p.center#demo
-        script.
-          var x = document.getElementById("demo");
-          function getLocation() {
-          if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(showPosition);
-          } else {
-          x.innerHTML = "Geolocation is not supported by this browser.";
-          }
-          }
-          function showPosition(position) {
-          x.innerHTML = "Latitude: " + position.coords.latitude +
-          "<br>Longitude: " + position.coords.longitude;
-          }
+        script(type="text/javascript", src="js/geolocate.js")
       form(action = "/" method = "get" class = "center")
         p
         input(type = "submit" value = "Log" class="blue-grey")
