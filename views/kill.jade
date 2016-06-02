@@ -3,7 +3,8 @@ html(lang='en')
   head
     include ./templates/header.jade
     include ./templates/globalVar.jade
-  body(class= bgColor)     
+  body(class= bgColor) 
+    include ./templates/playerNav.jade    
     div.container
       h1.center Log A Kill
       form(action = "/" method = "get")

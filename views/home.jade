@@ -4,25 +4,9 @@ html(lang="en")
     include ./templates/header.jade
     include ./templates/globalVar.jade
   body(class= bgColor)
-    //Import jQuery before materialize.js
-    script(type="text/javascript", src="js/jquery.js")
-    script(type="text/javascript" src="js/materialize.min.js")
+    include ./templates/scripts
     script(type="text/javascript" src="js/homePage.js")
-    //Navbar
-    header
-      nav
-        div(class="nav-wrapper blue-grey lighten-1")
-          a(href="#" class="brand-logo") Assassins
-          a(href="#" data-activates="mobile-demo" class="button-collapse") 
-            i(class="material-icons") menu
-            ul(id="nav-mobile" class="right hide-on-med-and-down")
-              li
-                a(href="kill") Assassinate
-              li
-                a(href="/" class="waves-effect waves-dark btn") Logout
-            ul(class="side-nav" id="mobile-demo")
-              li
-                a(href="/" class="waves-effect waves-dark btn") Logout
+    include ./templates/playerNav.jade
     //body        
     div(class="row")
       div(class="col s12 m6")
