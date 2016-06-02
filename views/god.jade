@@ -2,13 +2,13 @@ doctype html
 html(lang="en")
 	head
 		include ./templates/header.jade
-	body(class="blue-grey darken-3")
-		//Import jQuery before materialize.js
-		script(type="text/javascript", src="js/jquery.js")
-		script(type="text/javascript" src="js/materialize.min.js")
+		include ./templates/globalVar.jade
+	body(class= bgColor)
+		include ./templates/scripts.jade
 		include ./templates/godNav.jade
 		//body        
 		div(class="row")
+			//base classes for cards
 			- var card1 = ['blue-grey', 'white-text']
 			- var card2 = ['amber', 'black-text']
 			- var card3 = ['blue', 'white-text']

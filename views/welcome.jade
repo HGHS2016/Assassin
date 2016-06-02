@@ -2,7 +2,8 @@ doctype html
 html(lang='en')
   head
   include ./templates/header.jade
-  body(class="blue-grey darken-3")
+  include ./templates/globalVar.jade
+  body(class= bgColor)
     div.container
       div.row
         //for comp view, this allows different views based on device
