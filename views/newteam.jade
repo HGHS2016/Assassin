@@ -1,17 +1,23 @@
 doctype html
 html(lang="en")
+
 	head
 		include ./templates/header.jade
 		include ./templates/globalVar.jade
 	body(class= bgColor)
 		include ./templates/scripts.jade
 		include ./templates/godNav.jade
-
-		form()
-			select(id="p1")
-			select(id="p2")
-			p
-			input(type="text" id="teamname")
-			p
-			input(type="submit" value="Create Team")
-
+		div.row
+			form(class="col s12")
+				div(class="input-field col s12 m6")
+					select
+						option(value="" disabled selected)
+					input(type="text" id="teamname" placeholder="Team Name")
+				div(class="input-field col s12 m6")
+					select(id="p2")
+						option(value="" disabled selected)
+					button(type="submit" class="btn waves-effect waves-light blue-grey white-text") Submit Team
+		script.
+			$(document).ready(function() {
+				$('select').material_select();
+			});
