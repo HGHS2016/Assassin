@@ -8,23 +8,18 @@ nav
     a(href="#" data-activates="mobile-demo" class="button-collapse")
       i(class="material-icons") menu
       ul(id="nav-mobile" class="right hide-on-med-and-down")
-        li
-          a(href="/god") Home
-        //li
-        //  a(href="/god/list") Lists
-        li
-          a(href="/graphs" class = links) Data
-        li
-          a(href="/createTeam" class = links) Create Team
-        li
-          a(href="/" class=btn class=links) Logout
-      ul(class="side-nav indigo lighten-2" id="mobile-demo")
-        //
+        mixin navButtons
           li
-            a(href="/god/list" class= "white-text") Lists
-        li
-          a(href="graphs" class = links) Data
-        li
-          a(href="/createTeam" class = links) Create Team
-        li
-          a(href="/" class=btn class = links) Logout
+            a(href="/god") Home
+          //
+            li
+              a(href="/god/list") Lists
+          li
+            a(href="/graphs" class = links) Data
+          li
+            a(href="/createTeam" class = links) Create Team
+          li
+            a(href="/" class=btn class=links) Logout
+        +navButtons
+      ul(class="side-nav indigo lighten-2" id="mobile-demo")
+        +navButtons

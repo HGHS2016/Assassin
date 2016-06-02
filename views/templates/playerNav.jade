@@ -5,14 +5,13 @@ nav
     a(href="#" data-activates="mobile-demo" class="button-collapse") 
       i(class="material-icons") menu
       ul(id="nav-mobile" class="right hide-on-med-and-down")
-        li
-          a(href="home") Home
-        li
-          a(href="kill") Assassinate
-        li
-          a(href="/" class="waves-effect waves-dark btn") Logout
+        mixin navButtons
+          li
+            a(href="home") Home
+          li
+            a(href="kill") Assassinate
+          li
+            a(href="/" class="waves-effect waves-dark btn") Logout
+        +navButtons
       ul(class="side-nav" id="mobile-demo")
-        li
-          a(href="kill") Assassinate
-        li
-          a(href="/" class="waves-effect waves-dark btn") Logout
+        +navButtons
