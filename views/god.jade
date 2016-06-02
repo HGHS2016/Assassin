@@ -1,51 +1,12 @@
 doctype html
 html(lang="en")
 	head
-		title= Home
-		//link(rel="stylesheet", href="stylesheets/bootstrap.css", type="text/css")
-		//link(rel="stylesheet", href="stylesheets/style.css", type="text/css")
-
-		//Import Google Icon Font
-		link(href="http://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
-		//Import materialize.css
-		link(type="text/css", rel="stylesheet", href="stylesheets/materialize.min.css",  media="screen,projection")
-
-		//Let browser know website is optimized for mobile
-		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		include ./templates/header.jade
 	body(class="blue-grey darken-3")
 		//Import jQuery before materialize.js
 		script(type="text/javascript", src="js/jquery.js")
 		script(type="text/javascript" src="js/materialize.min.js")
-		script(type="text/javascript" src="js/homePage.js")
-		script(type="text/javascript" src="js/list.js")
-		script(type="text/javascript" src="js/slack-chat.js")
-		//script(type="text/javascript" src="js/teamlist.js")
-		//Navbar
-		header
-			nav
-				div(class="nav-wrapper blue-grey lighten-1")
-					a(href="#" class="brand-logo") Assassins
-					- var btn = ['waves-effect', 'waves-dark', 'btn', 'orange', 'darken-3']
-					a(href="#" data-activates="mobile-demo" class="button-collapse") 
-						i(class="material-icons") menu
-						ul(id="nav-mobile" class="right hide-on-med-and-down")
-							li
-								a(href="/god") Home
-							//li
-							//  a(href="/god/list") Lists
-							li
-								a(href="/god/graphs") Data
-							li
-								a(href="/god/createTeam") Create Team
-							li
-								a(href="/" class=btn) Logout
-						ul(class="side-nav indigo lighten-2" id="mobile-demo")
-							li
-								a(href="/god/list" class= "white-text") Lists
-							li
-								a(href="/god/graphs" class= "white-text") Data
-							li
-								a(href="/" class=btn) Logout
+		include ./templates/godNav.jade
 		//body        
 		div(class="row")
 			- var card1 = ['blue-grey', 'white-text']
@@ -79,3 +40,8 @@ html(lang="en")
 					div(class="card-content")
 						span(class="card-title") Chat 
 						div(class="slackchat slack-chat-box")
+						
+		script(type="text/javascript" src="js/homePage.js")
+		script(type="text/javascript" src="js/list.js")
+		script(type="text/javascript" src="js/slack-chat.js")
+		//script(type="text/javascript" src="js/teamlist.js")

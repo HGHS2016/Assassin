@@ -1,0 +1,27 @@
+//template Navbar
+//Navbar
+header
+  nav
+    div(class="nav-wrapper blue-grey lighten-1")
+      a(href="#" class="brand-logo") Assassins
+      - var btn = ['waves-effect', 'waves-dark', 'btn', 'orange', 'darken-3']
+      a(href="#" data-activates="mobile-demo" class="button-collapse") 
+        i(class="material-icons") menu
+        ul(id="nav-mobile" class="right hide-on-med-and-down")
+          li
+            a(href="/god") Home
+          //li
+          //  a(href="/god/list") Lists
+          li
+            a(href="/god/graphs") Data
+          li
+            a(href="/god/createTeam") Create Team
+          li
+            a(href="/" class=btn) Logout
+        ul(class="side-nav indigo lighten-2" id="mobile-demo")
+          li
+            a(href="/god/list" class= "white-text") Lists
+          li
+            a(href="/god/graphs" class= "white-text") Data
+          li
+            a(href="/" class=btn) Logout
