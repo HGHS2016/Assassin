@@ -2,6 +2,7 @@
     "name": "NodejsStarterApp",
     "version": "0.0.1",
     "private": true,
+    "memory" : "1GB",
     "scripts": {
 	"start": "node app.js"
     },
@@ -12,7 +13,8 @@
         "jade" : ">=1.1.4",
 	"pug"  : "*",
         "csv-array" : "*",
-	"hashmap" : "*"
+	"hashmap" : "*",
+	"moment" : "*"
     },
     "repository": {},
     "engines": {

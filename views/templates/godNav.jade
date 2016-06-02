@@ -1,0 +1,25 @@
+//template Navbar
+//Navbar
+nav
+  div(class="nav-wrapper blue-grey lighten-1")
+    a(href="#" class="brand-logo") Assassins
+    - var btn = ['waves-effect', 'waves-dark', 'btn', 'orange', 'darken-3']
+    - var links = ['white-text']
+    a(href="#" data-activates="mobile-demo" class="button-collapse")
+      i(class="material-icons") menu
+      ul(id="nav-mobile" class="right hide-on-med-and-down")
+        mixin navButtons
+          li
+            a(href="/god" class = links) Home
+          //
+            li
+              a(href="/god/list") Lists
+          li
+            a(href="/graphs" class = links) Data
+          li
+            a(href="/createTeam" class = links) Create Team
+          li
+            a(href="/" class=btn class=links) Logout
+        +navButtons
+      ul(class="side-nav indigo lighten-2" id="mobile-demo")
+        +navButtons

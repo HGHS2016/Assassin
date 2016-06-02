@@ -1,0 +1,17 @@
+//Player Navbar template
+nav
+  div(class="nav-wrapper blue-grey lighten-1")
+    a(href="#" class="brand-logo") Assassins
+    a(href="#" data-activates="mobile-demo" class="button-collapse") 
+      i(class="material-icons") menu
+      ul(id="nav-mobile" class="right hide-on-med-and-down")
+        mixin navButtons
+          li
+            a(href="home") Home
+          li
+            a(href="kill") Assassinate
+          li
+            a(href="/" class="waves-effect waves-dark btn") Logout
+        +navButtons
+      ul(class="side-nav" id="mobile-demo")
+        +navButtons
