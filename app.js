@@ -55,10 +55,10 @@ app.use(express.static(__dirname + '/public'));
 
 //session handler middleware
 app.use(session({
-  cookieName: 'session',
-  secret: 'random_string_goes_here',
-  duration: 30 * 60 * 1000,
-  activeDuration: 5 * 60 * 1000,
+	cookieName: 'session',
+	secret: 'random_string_goes_here',
+	duration: 30 * 60 * 1000,
+	activeDuration: 5 * 60 * 1000,
 }));
 
 // Bind the root '/' URL to the login page
@@ -96,7 +96,8 @@ app.get('/god', function(req, res){
 });
 
 app.get('/createTeam', function(req, res){
-	res.render('newteam.jade', {title: "Create a Team"});
+	//res.render('newteam.jade', {title: "Create a Team"});
+	datamodule.computeplayers(cloudant, res)
 });
 
 app.get('/kill', function(req, res){
@@ -104,50 +105,50 @@ app.get('/kill', function(req, res){
 });
 
 app.get('/sendingkill', function(req, res){
-  console.log(req.getLat());
-  res.send("Hello");
+	console.log(req.getLat());
+	res.send("Hello");
 });
 
 app.get('/playerlist', function(request, response) {
-    assassin.view('players', 'players-index',  function(err, body) {
-    	    if(!err) {
-    		var players = [];
-    		body.rows.forEach(function(doc) {
-    			players.push(doc.value);
-    		});
-    		response.send(JSON.stringify(players));
-    	}
-    });
+		assassin.view('players', 'players-index',  function(err, body) {
+					if(!err) {
+				var players = [];
+				body.rows.forEach(function(doc) {
+					players.push(doc.value);
+				});
+				response.send(JSON.stringify(players));
+			}
+		});
 });
 
 app.get('/badkill', function(request, response) {
-    var opts = {};
-    opts.db = "assassin";
-    opts.method = "get";
-    opts.content_type = "json";
-    opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-73.757322+41.174823)&include_docs=true";
-    cloudant.request(opts, function(err,body) {
+		var opts = {};
+		opts.db = "assassin";
+		opts.method = "get";
+		opts.content_type = "json";
+		opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-73.757322+41.174823)&include_docs=true";
+		cloudant.request(opts, function(err,body) {
 	if (err) {
-	    console.log("[badkill, cloudant error" + JSON.stringify(err));
-	    return;
+			console.log("[badkill, cloudant error" + JSON.stringify(err));
+			return;
 	}
- 	response.send(JSON.stringify(body.rows));
-    });
+	 response.send(JSON.stringify(body.rows));
+		});
 });
 
 app.get('/goodkill', function(request, response) {
-    var opts = {};
-    opts.db = "assassin";
-    opts.method = "get";
-    opts.content_type = "json";
-    opts.path = "_design/location/_geo/newGeoIndex?g=point(10+10)&include_docs=true";
-    cloudant.request(opts, function(err,body) {
+		var opts = {};
+		opts.db = "assassin";
+		opts.method = "get";
+		opts.content_type = "json";
+		opts.path = "_design/location/_geo/newGeoIndex?g=point(10+10)&include_docs=true";
+		cloudant.request(opts, function(err,body) {
 	if (err) {
-	    console.log("[goodkill, cloudant error" + JSON.stringify(err));
-	    return;
+			console.log("[goodkill, cloudant error" + JSON.stringify(err));
+			return;
 	}
- 	response.send(JSON.stringify(body.rows));
-    });
+	 response.send(JSON.stringify(body.rows));
+		});
 });
 
 app.get('/teamlist', function(request, response) {
@@ -178,7 +179,7 @@ app.get('/teamlist', function(request, response) {
 		});
 
 app.get('/targetlist', function(request,response) {
-    datamodule.computetargets(cloudant, response)
+		datamodule.computetargets(cloudant, response)
 });
 
 //    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
@@ -274,7 +275,7 @@ app.get('/signingup', function(request, response) {
 
 
 app.get('/initdata', function(request,response) {
-    datamodule.loaddata(cloudant, function() {
+		datamodule.loaddata(cloudant, function() {
 	response.send('data loading');})
 });
 
