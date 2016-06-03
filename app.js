@@ -219,9 +219,9 @@ app.get('/loggingin', function(request, response) {
 */
 app.post('/login', function(req, res){
 	assassin.get(req.param('user'), function(err, body) {
-		if(body){
+		if(!err){
 			console.log("not error!");
-			console.log(body.role);
+			console.log(body);
 			if(body.password == req.param('pass')) {
 				console.log("correct pass!");
 				if(body.role == "god") {
