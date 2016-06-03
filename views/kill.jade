@@ -3,17 +3,17 @@ html(lang='en')
   head
     include ./templates/header.jade
     include ./templates/globalVar.jade
-  body(class= bgColor) 
-    include ./templates/playerNav.jade    
+  body(class= bgColor)
+    include ./templates/playerNav.jade
     div.container
       h1.center Log A Kill
       form(action = "/" method = "get")
-        p DeceasedID: 
+        p DeceasedID:
         input(type = "text" name = "user")
-    p.center Click the button to record your coordinates. 
-        button(onclick='getLocation(function(location) { console.log('hi'); })' class="blue-grey") Get My Location
-        p.center#demo
         script(type="text/javascript", src="js/geolocate.js")
       form(action = "/sendingkill" method = "get" class = "center")
         p
         input(type = "submit" value = "Log" class="blue-grey")
+//p.center Click the button to record your coordinates.
+//button(onclick='getLocation(function(location))' class="blue-grey") Get My Location
+//p.center#demo
