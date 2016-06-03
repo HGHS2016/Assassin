@@ -4,13 +4,16 @@ html(lang='en')
     include ./templates/header.jade
     include ./templates/globalVar.jade
   body(class= bgColor)
+    script(type="text/javascript", src="js/geolocate.js")
     include ./templates/playerNav.jade
     div.container
       h1.center Log A Kill
       form(action = "/" method = "get")
         p DeceasedID:
         input(type = "text" name = "user")
-        script(type="text/javascript", src="js/geolocate.js")
+        p Latitude:
+        input(class="white-text" type = "text" name = "user" id = "location" disabled)
+      button(onclick="logPosition()" class = "btn") test
       form(action = "/sendingkill" method = "get" class = "center")
         p
         input(type = "submit" value = "Log" class="blue-grey")
