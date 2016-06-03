@@ -59,6 +59,10 @@ pre {
 	padding: 0;
 	margin: 0;
 }
+
+.logo{
+  max-height: 64px
+}
 /*
 .header {
 	position: fixed;
