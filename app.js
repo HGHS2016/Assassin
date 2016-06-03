@@ -6,6 +6,7 @@
 
 var express = require('express');
 var app = express();
+var session = require('client-sessions');
 
 //var http = require('http')
 
@@ -51,6 +52,14 @@ app.set('fonts', __dirname + '/fonts');
 
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
+
+//session handler middleware
+app.use(session({
+  cookieName: 'session',
+  secret: 'random_string_goes_here',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+}));
 
 // Bind the root '/' URL to the login page
 app.get('/', function(req, res){
@@ -120,7 +129,7 @@ app.get('/badkill', function(request, response) {
     cloudant.request(opts, function(err,body) {
 	if (err) {
 	    console.log("[badkill, cloudant error" + JSON.stringify(err));
-	    return; 
+	    return;
 	}
  	response.send(JSON.stringify(body.rows));
     });
@@ -135,7 +144,7 @@ app.get('/goodkill', function(request, response) {
     cloudant.request(opts, function(err,body) {
 	if (err) {
 	    console.log("[goodkill, cloudant error" + JSON.stringify(err));
-	    return; 
+	    return;
 	}
  	response.send(JSON.stringify(body.rows));
     });
@@ -185,6 +194,7 @@ app.get('/welcomehome', function(request, response) {
 		response.send(JSON.stringify(targets));
 });
 
+/** Depreciated
 app.get('/loggingin', function(request, response) {
 	assassin.get(request.param('user'), function(err, body) {
 		if(!err) {
@@ -205,6 +215,36 @@ app.get('/loggingin', function(request, response) {
 		}
 	});
 	//response.send("Hi");
+});
+*/
+app.post('/login', function(req, res){
+	assassin.get(req.param('user'), function(err, body) {
+		if(body){
+			console.log("not error!");
+			console.log(body.role);
+			if(body.password == req.param('pass')) {
+				console.log("correct pass!");
+				if(body.role == "god") {
+					console.log("god");
+					res.redirect("/god");
+				}
+				else if(body.role == "assassin") {
+					console.log("assassin");
+					res.redirect("/home");
+				} else {
+					res.render("login.jade", {error: 'Invalid username or password.'});
+				}
+			}
+			else {
+				console.log("fail2");
+				res.render("login.jade", {error: 'Invalid username or password.'});
+			}
+		}
+		else {
+			console.log("fail");
+			res.render("login.jade", {error: 'Invalid username or password.'});
+		}
+	});
 });
 
 app.get('/signingup', function(request, response) {

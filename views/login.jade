@@ -1,18 +1,18 @@
 doctype html
 html(lang='en')
-  head
-    include ./templates/header.jade
-    include ./templates/globalVar.jade
-  body(class= bgColor)     
-    div.container
-      h1.center Log In
-      - if(pageData.failed)
-        p.center (Your username or password may be incorrect)
-      form(action = "/loggingin" method = "get")
-        div(class="input-field col s12")
-          input( placeholder="Username" type = "text" name = "user")
-        div(class="input-field col s12")
-          input(placeholder="Password" type = "password" name = "pass")
-        p 
-        button(type = "submit" name = "action" class="btn waves-effect waves-light blue-grey white-text") Log in
-          i(class = "material-icons right") send
+	head
+		include ./templates/header.jade
+		include ./templates/globalVar.jade
+	body(class= bgColor)     
+		div.container
+			h1.center Log In
+			- if(error == 'Invalid username or password.')
+				p.center (Your username or password may be incorrect)
+			form(action = "/login" method = "post")
+				div(class="input-field col s12")
+					input( placeholder="Username" type = "text" name = "user")
+				div(class="input-field col s12")
+					input(placeholder="Password" type = "password" name = "pass")
+				p 
+				button(type = "submit" name = "action" class="btn waves-effect waves-light blue-grey white-text") Log in
+					i(class = "material-icons right") send
