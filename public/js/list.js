@@ -78,14 +78,19 @@ function populateTeamTable() {
  * Populate the hiscore table by retrieving top 10 scores from the DB.
  * Called when the DOM is fully loaded.
  */
-function populateTable() {
+function populateTargetTable() {
   var table = $("#target_table tr");
+  var toggle = false;
   $.get("/targetlist", function (data) {
-    var targets = JSON.parse(data);
-    targets.forEach(function (target) {
-      var html = createTableRow(target.name, target.target, target.time);
+    console.log(data);
+    var targets = JSON.parse(data['_data']['']);
+    console.log('targets value: ' + targets);
+    for(var target in targets){
+      toggle = !toggle;
+      console.log(target);
+      var html = createTeamTableRow(target.name, target.player1, target.player2, target.target, toggle);
       table.last().after(html);
-    });
+    };
   });
 }
 
@@ -114,3 +119,4 @@ function organizeTeams(teams){
 
 $(populatePlayerTable);
 $(populateTeamTable);
+$(populateTargetTable);
