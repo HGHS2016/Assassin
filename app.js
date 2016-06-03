@@ -104,7 +104,9 @@ app.get('/kill', function(req, res){
 });
 
 app.get('/sendingkill', function(req, res){
-  res.send("Hello");
+	
+	res.send("HI");
+	
 });
 
 app.get('/playerlist', function(request, response) {
