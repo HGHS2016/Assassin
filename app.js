@@ -207,11 +207,13 @@ app.get('/loggingin', function(request, response) {
 				}
 			}
 			else {
-				response.redirect("/loginfailed");
+				console.log("failed");
+				response.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", error: 'Invalid username or password.'}});
 			}
 		}
 		else {
-			response.redirect("/loginfailed");
+			console.log("failed");
+			response.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", error: 'Invalid username or password.'}});
 		}
 	});
 	//response.send("Hi");
