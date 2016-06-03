@@ -38,7 +38,7 @@ function createTeamTableRow(name, player1, player2, target, toggle) {
 }
 
 
-function createTableRow(name, target, time) {
+function createTargetTableRow(name, target, time) {
     return '<tr><td>' + name + '</td><td class="center">' + target.toUpperCase() + '</td><td>' + time + '</td></tr>';
 }
 
@@ -61,16 +61,34 @@ function populatePlayerTable() {
 
 function populateTeamTable() {
   var table = $("#team_table tr");
+  console.log(table);
   var toggle = true;
   $.get("/teamlist", function(data) {
     var teams = JSON.parse(data);
+    var html = '';
     organizeTeams(teams).forEach(function(team) {
       toggle = !toggle;
-      var html = createTeamTableRow(team.name, team.player1, team.player2, team.target, toggle);
+      html = html.concat(createTeamTableRow(team.name, team.player1, team.player2, team.target, toggle));
+    });
+    table.last().after(html);
+  });
+}
+
+/**
+ * Populate the hiscore table by retrieving top 10 scores from the DB.
+ * Called when the DOM is fully loaded.
+ */
+function populateTable() {
+  var table = $("#target_table tr");
+  $.get("/targetlist", function (data) {
+    var targets = JSON.parse(data);
+    targets.forEach(function (target) {
+      var html = createTableRow(target.name, target.target, target.time);
       table.last().after(html);
     });
   });
 }
+
 
 function organizeTeams(teams){
   teams.sort();
@@ -83,12 +101,14 @@ function organizeTeams(teams){
     if(ret[i].target == teams[j].name){
       ret.push(teams[j]);
       j = 0;
+      i++;
     } else {
       j++;
     }
   }
-  console.log(ret.forEach());
-  console.log(ret);
+  ret.forEach(function(value){
+    console.log(value);
+  });
   return ret;
 }
 
