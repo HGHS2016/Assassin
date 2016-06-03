@@ -232,7 +232,7 @@ app.post('/login', function(req, res){
 					console.log("assassin");
 					res.redirect("/home");
 				} else {
-					res.render("login.jade", {error: 'Invalid username or password.'});
+					res.render("login.jade", {error: 'something failed'});
 				}
 			}
 			else {

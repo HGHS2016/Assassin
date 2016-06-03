@@ -64,12 +64,32 @@ function populateTeamTable() {
   var toggle = true;
   $.get("/teamlist", function(data) {
     var teams = JSON.parse(data);
-    teams.forEach(function(team) {
+    organizeTeams(teams).forEach(function(team) {
       toggle = !toggle;
       var html = createTeamTableRow(team.name, team.player1, team.player2, team.target, toggle);
       table.last().after(html);
     });
   });
+}
+
+function organizeTeams(teams){
+  teams.sort();
+  var ret = new Array();
+  ret.push(teams[0])
+  console.log(ret[0]);
+  var i = 0;
+  var j = 0;
+  while(ret < teams){
+    if(ret[i].target == teams[j].name){
+      ret.push(teams[j]);
+      j = 0;
+    } else {
+      j++;
+    }
+  }
+  console.log(ret.forEach());
+  console.log(ret);
+  return ret;
 }
 
 $(populatePlayerTable);
