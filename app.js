@@ -104,7 +104,6 @@ app.get('/kill', function(req, res){
 });
 
 app.get('/sendingkill', function(req, res){
-  console.log(req.getLat());
   res.send("Hello");
 });
 

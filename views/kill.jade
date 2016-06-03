@@ -10,10 +10,10 @@ html(lang='en')
       form(action = "/" method = "get")
         p DeceasedID:
         input(type = "text" name = "user")
-//    p.center Click the button to record your coordinates.
-//        button(onclick='getLocation(function(location))' class="blue-grey") Get My Location
-//        p.center#demo
         script(type="text/javascript", src="js/geolocate.js")
       form(action = "/sendingkill" method = "get" class = "center")
         p
         input(type = "submit" value = "Log" class="blue-grey")
+//p.center Click the button to record your coordinates.
+//button(onclick='getLocation(function(location))' class="blue-grey") Get My Location
+//p.center#demo
