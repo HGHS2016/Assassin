@@ -194,7 +194,6 @@ app.get('/welcomehome', function(request, response) {
 		response.send(JSON.stringify(targets));
 });
 
-/** Depreciated
 app.get('/loggingin', function(request, response) {
 	assassin.get(request.param('user'), function(err, body) {
 		if(!err) {
@@ -216,12 +215,14 @@ app.get('/loggingin', function(request, response) {
 	});
 	//response.send("Hi");
 });
-*/
-app.post('/login', function(req, res){
+
+//login should use post, but this is not working
+/*app.post('/login', function(req, res){
 	assassin.get(req.param('user'), function(err, body) {
+		console.log("THIS IS USER: " + req.param('user'));
 		if(!err){
 			console.log("not error!");
-			console.log(body);
+			console.log(JSON.stringify(body));
 			if(body.password == req.param('pass')) {
 				console.log("correct pass!");
 				if(body.role == "god") {
@@ -245,7 +246,7 @@ app.post('/login', function(req, res){
 			res.render("login.jade", {error: 'Invalid username or password.'});
 		}
 	});
-});
+});*/
 
 app.get('/signingup', function(request, response) {
 	if(request.param('pass') != request.param('pass2')) {
