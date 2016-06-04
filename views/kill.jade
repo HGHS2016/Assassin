@@ -13,7 +13,10 @@ html(lang='en')
         input(type = "text" name = "user")
         p Latitude:
         input(class="white-text" type = "text" name = "user" id = "location" disabled)
-      button(onclick="logPosition()" class = "btn") test
+      p
+        button(onclick="logPosition()" class = "btn") test
+      p
+        button(onclick="clear()" class = "btn") clear
       form(action = "/sendingkill" method = "get" class = "center")
         p
         input(type = "submit" value = "Log" class="blue-grey")

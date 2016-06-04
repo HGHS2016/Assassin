@@ -24,3 +24,7 @@ function logPosition(position) {
       x.innerHTML = "Geolocation is not supported by this browser.";
   }
 }
+
+function clear(){
+  document.getElementById("location").value = "add location";
+}
