@@ -1,23 +1,23 @@
 doctype html
 html(lang='en')
-  head
-  include ./templates/header.jade
-  include ./templates/globalVar.jade
-  body(class= bgColor)
-    div.container
-      div.row
-        //for comp view, this allows different views based on device
-        div(class="col m3 l3 hide-on-med-and-down")
-          mixin list
-            h1 Welcome to Assassins!
-            a(class="btn btn-default white-text", href="/login") Log In
-            p Don't have an account?
-            a(class="btn btn-default white-text", href="/signup") Sign Up
-            p Don't have a game set up?
-            a(class="btn btn-default white-text", href="/create") Create A New Game  
-          +list
-        div(class="col m9 hide-on-med-and-down")
-          img(class="responsive-img" src="images/logo.png")
-        //for mobile view  
-        div(class="col s12 m12 l6 hide-on-large-only center" background="images/logo.png")
-          +list
+	head
+	include ./templates/header.jade
+	include ./templates/globalVar.jade
+	body(class= bgColor)
+		div.container
+			div.row
+				//for comp view, this allows different views based on device
+				div(class="col m3 l3 hide-on-med-and-down")
+					mixin list
+						h1 Welcome to Assassins!
+						a(class="btn btn-default white-text", href="/login") Log In
+						p Don't have an account?
+						a(class="btn btn-default white-text", href="/signup") Sign Up
+						p Don't have a game set up?
+						a(class="btn btn-default white-text", href="/create") Create A New Game  
+					+list
+				div(class="col m9 hide-on-med-and-down")
+					img(class="responsive-img" src="images/logo.png")
+				//for mobile view  
+				div(class="col s12 m12 l6 hide-on-large-only center" background="images/logo.png")
+					+list

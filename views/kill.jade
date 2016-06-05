@@ -1,25 +1,25 @@
 doctype html
 html(lang='en')
-  head
-    include ./templates/header.jade
-    include ./templates/globalVar.jade
-  body(class= bgColor)
-    script(type="text/javascript", src="js/geolocate.js")
-    include ./templates/playerNav.jade
-    div.container
-      h1.center Log A Kill
-      form(action = "/" method = "get")
-        p DeceasedID:
-        input(type = "text" name = "user")
-        p Latitude:
-        input(class="white-text" type = "text" name = "user" id = "location" disabled)
-      p
-        button(onclick="logPosition()" class = "btn") test
-      p
-        button(onclick="clear()" class = "btn") clear
-      form(action = "/sendingkill" method = "get" class = "center")
-        p
-        input(type = "submit" value = "Log" class="blue-grey")
+	head
+		include ./templates/header.jade
+		include ./templates/globalVar.jade
+	body(class= bgColor)
+		script(type="text/javascript", src="js/geolocate.js")
+		include ./templates/playerNav.jade
+		div.container
+			h1.center Log A Kill
+			form(action = "/" method = "get")
+				p DeceasedID:
+				input(type = "text" name = "user")
+				p Latitude:
+				input(class="white-text" type = "text" name = "user" id = "location" disabled)
+			p
+				button(onclick="logPosition()" class = "btn") test
+			p
+				button(onclick="clear()" class = "btn") clear
+			form(action = "/sendingkill" method = "get" class = "center")
+				p
+				input(type = "submit" value = "Log" class="blue-grey")
 //p.center Click the button to record your coordinates.
 //button(onclick='getLocation(function(location))' class="blue-grey") Get My Location
 //p.center#demo

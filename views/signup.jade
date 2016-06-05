@@ -1,27 +1,27 @@
 doctype html
 html(lang='en')
-  head
-    include ./templates/header.jade
-    include ./templates/globalVar.jade
-  body(class= bgColor)
+	head
+		include ./templates/header.jade
+		include ./templates/globalVar.jade
+	body(class= bgColor)
 
-    h1.center Sign Up
-    - if(pageData.failed)
-      p.center (Your username may already be taken or your password confirmation may have failed)
-    .row
-      form(action = "/signingup")
-        div(class="input-field col s12 m6 l6")
-          input(placeholder= "First Name" type = "text" name = "first")
-        div(class="input-field col s12 m6 l6")
-          input(placeholder= "Last Name" type = "text" name = "last")
-        div(class="input-field col s12")
-          input(placeholder= "Username" type = "text" name = "user")
-        div(class="input-field col s12 m6 l6")
-          input(placeholder= "Password" type = "password" name = "pass")
-        div(class="input-field col s12 m6 l6") 
-          input(placeholder= "Re-Enter Password" type = "password" name = "pass2")
-        div(class="input-field col s12") 
-          input(placeholder= "Organization Code" type = "text" name = "org")
-        p 
-        button(type = "submit" name = "action" class="btn waves-effect waves-light white-text") Sign up
-          i(class = "material-icons right") send
+		h1.center Sign Up
+		- if(pageData.failed)
+			p.center (Your username may already be taken or your password confirmation may have failed)
+		.row
+			form(action = "/signingup")
+				div(class="input-field col s12 m6 l6")
+					input(placeholder= "First Name" type = "text" name = "first")
+				div(class="input-field col s12 m6 l6")
+					input(placeholder= "Last Name" type = "text" name = "last")
+				div(class="input-field col s12")
+					input(placeholder= "Username" type = "text" name = "user")
+				div(class="input-field col s12 m6 l6")
+					input(placeholder= "Password" type = "password" name = "pass")
+				div(class="input-field col s12 m6 l6") 
+					input(placeholder= "Re-Enter Password" type = "password" name = "pass2")
+				div(class="input-field col s12") 
+					input(placeholder= "Organization Code" type = "text" name = "org")
+				p 
+				button(type = "submit" name = "action" class="btn waves-effect waves-light white-text") Sign up
+					i(class = "material-icons right") send
