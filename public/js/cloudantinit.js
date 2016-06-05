@@ -28,13 +28,10 @@ function addteamstoplayers(playersonteams, allplayers){
     
     playersonteams.rows.forEach(function(row) {
 	playersonteamshash.set(row.key.player, {"player": row.key.player, "team": row.id});
-	//console.log(JSON.stringify(playersonteamshash));
     });
-    //console.log(JSON.stringify(playersonteamshash));
     allplayers.rows.forEach(function(doc) {
 	playerteam = playersonteamshash.get(doc.id);
 	if (playerteam) {    // rjc: new line
-	    console.log(JSON.stringify(playerteam));
 	    // allplayerslist.push({"id": doc.id, "name": doc.value.name, "role": doc.value.role, "team": doc.value.team, "status": doc.value.status});
 	    allplayerlist.push({"id": doc.id, "name": doc.value.name, "role": doc.value.role, "team": playerteam.team, "status": doc.value.status});
 	}
@@ -88,14 +85,35 @@ function afterteam(err, body) {
     teams.set(teamrow.name, teamrow);
     teams.forEach(function(team) {
 	curtarget = teams.get(team.target.current);
-	console.log(JSON.stringify(curtarget));
 	while (curtarget.status == 'dead' && curtarget != team) {
 	    team.target.current = curtarget.target.current
 	    curtarget = teams.get(team.target.current);
 	}
     });
-    console.log(JSON.stringify(teams));
+//    return organizeTeams(teams);  Elliot pick up here..
     return teams.values();  // rjc:  added .values()
+}
+
+function organizeTeams(teams){
+  var ret = new Array();
+
+    ret.push(teams[0])
+  console.log(ret[0]);
+  var i = 0;
+  var j = 0;
+  while(ret < teams){
+    if(ret[i].target == teams[j].name){
+      ret.push(teams[j]);
+      j = 0;
+      i++;
+    } else {
+      j++;
+    }
+  }
+  ret.forEach(function(value){
+    console.log(value);
+  });
+  return ret;
 }
 
 function initteamrow(curteam) {

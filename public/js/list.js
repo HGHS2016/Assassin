@@ -68,7 +68,7 @@ function populateTeamTable() {
     var html = '';
     organizeTeams(teams).forEach(function(team) {
       toggle = !toggle;
-      html = html.concat(createTeamTableRow(team.name, team.player1, team.player2, team.target, toggle));
+      html = html.concat(createTeamTableRow(team.name, team.player1.name, team.player2.name, team.target.current, toggle));
     });
     table.last().after(html);
   });
@@ -83,12 +83,12 @@ function populateTargetTable() {
   var toggle = false;
   $.get("/targetlist", function (data) {
     console.log(data);
-    var targets = JSON.parse(data['_data']['']);
+    var targets = JSON.parse(data);
     console.log('targets value: ' + targets);
     for(var target in targets){
       toggle = !toggle;
       console.log(target);
-      var html = createTeamTableRow(target.name, target.player1, target.player2, target.target, toggle);
+      var html = createTeamTableRow(target.name, target.player1.name, target.player2.name, target.target.current, toggle);
       table.last().after(html);
     };
   });

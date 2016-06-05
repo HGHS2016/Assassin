@@ -110,15 +110,7 @@ app.get('/sendingkill', function(req, res){
 });
 
 app.get('/playerlist', function(request, response) {
-		assassin.view('players', 'players-index',  function(err, body) {
-					if(!err) {
-				var players = [];
-				body.rows.forEach(function(doc) {
-					players.push(doc.value);
-				});
-				response.send(JSON.stringify(players));
-			}
-		});
+	datamodule.computeplayers(cloudant, response)
 });
 
 app.get('/badkill', function(request, response) {
@@ -151,6 +143,12 @@ app.get('/goodkill', function(request, response) {
 		});
 });
 
+// New version of teamlist
+app.get('/teamlist', function(request, response) {
+    datamodule.computeplayers(cloudant, response)
+});
+	
+/* Old version of teamlist
 app.get('/teamlist', function(request, response) {
 	assassin.view('team', 'team-index', {include_docs: true},  function(err, body) {
 		if(!err) {
@@ -177,7 +175,7 @@ app.get('/teamlist', function(request, response) {
 		}
 			});
 		});
-
+*/
 app.get('/targetlist', function(request,response) {
 		datamodule.computetargets(cloudant, response)
 });
