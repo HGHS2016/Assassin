@@ -9,34 +9,42 @@ var local;
 var assassin;
 
 function computeplayers(cloudant, response) {
-		local = cloudant;
-		assassin = local.db.use('assassin');
-		assassin.view('team', 'players-on-teams', {include_docs: false}, function (err, playersonteams) {
-		if(err) return err;
-			assassin.view('players', 'players-index', {include_docs: true}, function(err, allplayers) {
-					if(err) return err;
-				var players = addteamstoplayers(playersonteams, allplayers);
-				response.send(JSON.stringify(players));
-			});
-		});
+    local = cloudant;
+    assassin = local.db.use('assassin');
+    assassin.view('team', 'players-on-teams', {include_docs: false}, function (err, playersonteams) {
+	if(err) return err;
+	assassin.view('players', 'players-index', {include_docs: true}, function(err, allplayers) {
+	    if(err) return err;
+	    var players = addteamstoplayers(playersonteams, allplayers);
+	    response.send(JSON.stringify(players));
+	});
+    });
 }
 
 function addteamstoplayers(playersonteams, allplayers){
-		var allplayerlist = [];
-		var playersonteamshash = new HashMap();
-		playersonteams.rows.forEach(function(row) {
-			playersonteamshash.set(row.key.player, {"player": row.key.player, "team": row.id});
-			//console.log(JSON.stringify(playersonteamshash));
-		});
-		//console.log(JSON.stringify(playersonteamshash));
-		allplayers.rows.forEach(function(doc) {
-			var playerteam = playersonteamshash.get(doc.id);
-			console.log(JSON.stringify(playerteam));
-			var team = playerteam.team;
-			allplayerslist.push({"id": doc.id, "name": doc.value.name, "role": doc.value.role, "team": doc.value.team, "status": doc.value.status});
-		});
-		return allplayerlist;
+    var allplayerlist = [];
+    var playersonteamshash = new HashMap();
+    var playerteam;
+    
+    playersonteams.rows.forEach(function(row) {
+	playersonteamshash.set(row.key.player, {"player": row.key.player, "team": row.id});
+	//console.log(JSON.stringify(playersonteamshash));
+    });
+    //console.log(JSON.stringify(playersonteamshash));
+    allplayers.rows.forEach(function(doc) {
+	playerteam = playersonteamshash.get(doc.id);
+	if (playerteam) {    // rjc: new line
+	    console.log(JSON.stringify(playerteam));
+	    // allplayerslist.push({"id": doc.id, "name": doc.value.name, "role": doc.value.role, "team": doc.value.team, "status": doc.value.status});
+	    allplayerlist.push({"id": doc.id, "name": doc.value.name, "role": doc.value.role, "team": playerteam.team, "status": doc.value.status});
+	}
+	else {  // rjc: new line
+	    allplayerlist.push({"id": doc.id, "name": doc.value.name, "role": doc.value.role, "team": "", "status": doc.value.status});
+	}
+    });
+    return allplayerlist;
 }
+
 
 function computetargets(cloudant, response) {
 		local = cloudant;
@@ -46,6 +54,48 @@ function computetargets(cloudant, response) {
 	teams = afterteam(err, body);
 	response.send(JSON.stringify(teams));
 		});
+}
+
+function afterteam(err, body) {
+    if (err) return err;
+    var teams = new HashMap();
+    var curtarget;
+    var curteam = body.rows[0].key.team;
+    var teamrow = initteamrow(curteam);
+    body.rows.forEach(function(row) {
+	if (curteam != row.key.team) {
+	    computeteamstatus(teamrow);
+	    teams.set(teamrow.name, teamrow);
+	    curteam = row.key.team;
+	    teamrow = initteamrow(curteam);
+	};
+	if (row.key.field == 'player1') {
+	    teamrow.player1.name = row.doc.first.concat(' ').concat(row.doc.last);
+	    teamrow.player1.status = row.doc.status;
+	};
+	
+	if (row.key.field == 'player2') {
+	    teamrow.player2 = row.doc.first.concat(' ').concat(row.doc.last);
+	    teamrow.player2.status = row.doc.status;
+	};
+
+	if (row.key.field == 'target') {
+	    teamrow.target.original = row.doc.name;
+	    teamrow.target.current =  row.doc.name;
+	};
+    });
+    computeteamstatus(teamrow);
+    teams.set(teamrow.name, teamrow);
+    teams.forEach(function(team) {
+	curtarget = teams.get(team.target.current);
+	console.log(JSON.stringify(curtarget));
+	while (curtarget.status == 'dead' && curtarget != team) {
+	    team.target.current = curtarget.target.current
+	    curtarget = teams.get(team.target.current);
+	}
+    });
+    console.log(JSON.stringify(teams));
+    return teams.values();  // rjc:  added .values()
 }
 
 function initteamrow(curteam) {
@@ -64,47 +114,8 @@ function computeteamstatus(team) {
 		if (team.name == "grape" || team.name == "cantalope") team.status = 'dead';
 }
 
-function afterteam(err, body) {
-		if (err) return err;
-		var teams = new HashMap();
-		var curtarget;
-		var curteam = body.rows[0].key.team;
-		var teamrow = initteamrow(curteam);
-		body.rows.forEach(function(row) {
-	if (curteam != row.key.team) {
-			computeteamstatus(teamrow);
-			teams.set(teamrow.name, teamrow);
-			curteam = row.key.team;
-			teamrow = initteamrow(curteam);
-	};
-	if (row.key.field == 'player1') {
-			teamrow.player1.name = row.doc.first.concat(' ').concat(row.doc.last);
-			teamrow.player1.status = row.doc.status;
-	};
 
-	if (row.key.field == 'player2') {
-			teamrow.player2 = row.doc.first.concat(' ').concat(row.doc.last);
-			teamrow.player2.status = row.doc.status;
-	};
-
-	if (row.key.field == 'target') {
-			teamrow.target.original = row.doc.name;
-			teamrow.target.current =  row.doc.name;
-	};
-		});
-		computeteamstatus(teamrow);
-		teams.set(teamrow.name, teamrow);
-		teams.forEach(function(team) {
-	curtarget = teams.get(team.target.current);
-	console.log(JSON.stringify(curtarget));
-	while (curtarget.status == 'dead' && curtarget != team) {
-			team.target.current = curtarget.target.current
-			curtarget = teams.get(team.target.current);
-	}
-		});
-		console.log(JSON.stringify(teams));
-		return teams;
-}
+// Functions for initializing the database
 
 function reinitdata(cloudant) {
 		local = cloudant;
