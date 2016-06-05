@@ -145,7 +145,7 @@ app.get('/goodkill', function(request, response) {
 
 // New version of teamlist
 app.get('/teamlist', function(request, response) {
-    datamodule.computeplayers(cloudant, response)
+    datamodule.computeteams(cloudant, response)
 });
 	
 /* Old version of teamlist

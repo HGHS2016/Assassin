@@ -1,5 +1,5 @@
 module.exports.loaddata = reinitdata
-module.exports.computetargets = computetargets
+module.exports.computeteams = computeteams
 module.exports.computeplayers = computeplayers
 
 var csv = require('csv-array');
@@ -43,7 +43,7 @@ function addteamstoplayers(playersonteams, allplayers){
 }
 
 
-function computetargets(cloudant, response) {
+function computeteams(cloudant, response) {
 		local = cloudant;
 		assassin = local.db.use('assassin');
 		assassin.view('team', 'team-index', {include_docs: true}, function returnfromcloudant(err, body) {
@@ -90,30 +90,27 @@ function afterteam(err, body) {
 	    curtarget = teams.get(team.target.current);
 	}
     });
-//    return organizeTeams(teams);  Elliot pick up here..
-    return teams.values();  // rjc:  added .values()
+    return organizeTeams(teams);
+//    return teams.values();  // rjc:  added .values()
 }
 
 function organizeTeams(teams){
-  var ret = new Array();
-
-    ret.push(teams[0])
-  console.log(ret[0]);
-  var i = 0;
-  var j = 0;
-  while(ret < teams){
-    if(ret[i].target == teams[j].name){
-      ret.push(teams[j]);
-      j = 0;
-      i++;
-    } else {
-      j++;
+    var ret = teams.values();
+    ret.sort();
+    var cur = 0;
+    var nxt = 1;
+    var numberOfTeams = ret.length; 
+    console.log(ret.length);
+    while(cur < ret.length-1){
+	if(ret[cur].target.original != ret[nxt].name){
+	    ret[nxt] = teams.get(ret[cur].target.original);
+	}
+	cur++; nxt++;
     }
-  }
-  ret.forEach(function(value){
-    console.log(value);
-  });
-  return ret;
+    ret.forEach(function(value){
+	console.log(value);
+    });
+    return ret;
 }
 
 function initteamrow(curteam) {

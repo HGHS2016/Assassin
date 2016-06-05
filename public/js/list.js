@@ -79,19 +79,22 @@ function populateTeamTable() {
  * Called when the DOM is fully loaded.
  */
 function populateTargetTable() {
-  var table = $("#target_table tr");
-  var toggle = false;
-  $.get("/targetlist", function (data) {
-    console.log(data);
-    var targets = JSON.parse(data);
-    console.log('targets value: ' + targets);
-    for(var target in targets){
-      toggle = !toggle;
-      console.log(target);
-      var html = createTeamTableRow(target.name, target.player1.name, target.player2.name, target.target.current, toggle);
-      table.last().after(html);
-    };
-  });
+    var table = $("#target_table tr");
+    var toggle = false;
+    $.get("/teamlist", function (data) {
+	console.log(data);
+	var targets = JSON.parse(data);
+	console.log('teams value: ' + teams);
+	var html = "";
+	for(var target in targets){
+	    if (target.status != dead) {
+		toggle = !toggle;
+		console.log(target);
+		var html = html + createTeamTableRow(target.name, target.player1.name, target.player2.name, target.target.current, toggle);
+	    }
+	};
+	table.last().after(html);
+    });
 }
 
 
