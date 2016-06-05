@@ -176,8 +176,9 @@ app.get('/teamlist', function(request, response) {
 			});
 		});
 */
-app.get('/targetlist', function(request,response) {
-		datamodule.computetargets(cloudant, response)
+
+app.get('/targetlist', function(request, response) {
+    datamodule.computeteams(cloudant, response)
 });
 
 //    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});

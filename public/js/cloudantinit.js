@@ -44,13 +44,14 @@ function addteamstoplayers(playersonteams, allplayers){
 
 
 function computeteams(cloudant, response) {
-		local = cloudant;
-		assassin = local.db.use('assassin');
-		assassin.view('team', 'team-index', {include_docs: true}, function returnfromcloudant(err, body) {
+    local = cloudant;
+    assassin = local.db.use('assassin');
+    assassin.view('team', 'team-index', {include_docs: true}, function returnfromcloudant(err, body) {
 	if(err) return err;
 	teams = afterteam(err, body);
+	console.log("Teams = " + JSON.stringify(teams));
 	response.send(JSON.stringify(teams));
-		});
+    });
 }
 
 function afterteam(err, body) {
@@ -100,7 +101,6 @@ function organizeTeams(teams){
     var cur = 0;
     var nxt = 1;
     var numberOfTeams = ret.length; 
-    console.log(ret.length);
     while(cur < ret.length-1){
 	if(ret[cur].target.original != ret[nxt].name){
 	    ret[nxt] = teams.get(ret[cur].target.original);
