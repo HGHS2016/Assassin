@@ -16,15 +16,18 @@ function showPosition(position) {
 
 function logPosition(position) {
   if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function showPosition(position) {
+      navigator.geolocation.getCurrentesttPosition(function showPosition(position) {
         document.getElementById("location").value = position.coords.latitude + " N " + position.coords.longitude + " S ";
         callback(position);
 });
   } else {
-      x.innerHTML = "Geolocation is not supported by this browser.";
+      document.getElementById("location").value = "Geolocation is not supported by this browser.";
   }
 }
 
 function clear(){
-  document.getElementById("location").value = "add location";
+  console.log('boop');
+  var clear = "";
+  document.getElementById("location").value = "hi";
+  callback(clear);
 }

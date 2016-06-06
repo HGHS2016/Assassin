@@ -81,7 +81,10 @@ app.get('/home', function(req, res){
 				// expose the user to the template
 				res.locals.user = user;
 				// render the player page
-    		res.render('home.jade', {"title": "HOME", "user": user});
+    		res.render('home.jade', {pageData: {
+					"title": "HOME",
+					"user" : user,
+				}});
 			}
 		});
 	} else {
@@ -177,7 +180,10 @@ app.get('/god', function(req, res){
 					// expose the user to the template
 					res.locals.user = user;
 					// render the god page
-					res.render('god.jade', {title: "gods view!"});
+					res.render('god.jade', {pageData: {
+						"title": "gods view!",
+						"user" : user,
+					}});
 				}
 			});
 		} else {
@@ -196,7 +202,7 @@ app.get('/kill', function(req, res){
 });
 
 app.get('/sendingkill', function(req, res){
-	console.log(req.getLat());
+	//console.log(req.getLat());
 	res.send("HI");
 });
 
