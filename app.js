@@ -175,11 +175,7 @@ app.get('/god', function(req, res){
 					req.redirect('/login')
 				} else {
 					// expose the user to the template
-					console.log(user);
-					console.log(res.locals.user);
 					res.locals.user = user;
-					console.log(res.locals.user);
-					console.log(user);
 					// render the god page
 					res.render('god.jade', {title: "gods view!"});
 				}
