@@ -49,7 +49,7 @@ function createTargetTableRow(name, player1, player2, target, toggle) {
  */
 function populatePlayerTable() {
     var table = $("#player_table tr");
-    var toggle = false;
+    var toggle = true;
     $.get("/playerlist", function(data) {
 	var html = '';
 	var players = JSON.parse(data);
