@@ -88,7 +88,6 @@ function populateTargetTable() {
 	teams.forEach(function(team) {
 	    if (team.status != "dead") {
 		toggle = !toggle;
-		console.log("Team is: " + JSON.stringify(team));
 		html = html.concat(createTargetTableRow(team.name, team.player1.name, team.player2.name, team.target.current, toggle));
 	    }
 	});
