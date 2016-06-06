@@ -195,9 +195,42 @@ app.get('/kill', function(req, res){
 	res.render('kill.jade', {title: "LET'S KILL"});
 });
 
-app.get('/sendingkill', function(req, res){
-	console.log(req.getLat());
-	res.send("HI");
+app.get('/sendingkill', function(req, res) {
+	var killed;
+	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
+		if(!err) {
+			console.log("NOT ERR! U R STILL AN IDIOT");
+			body.rows.forEach(function(row) {
+				//req.param('uniqueid')) {
+				//console.log("OTHER: " + body.uniqueid);
+				//console.log("BODY: " + JSON.stringify(body));
+				if(row.doc.uniqueid == "abc125") {
+					console.log("FOUND KILLED!!!!! YOU R STILL DUMB");
+					assassin.get(row.doc._id, function(err2, body2) {
+						if(!err2) {
+							console.log("U ACTUALLY FOUND THE KILLED DOCUMENT");
+							killed = body2._id;
+							//res.locals.user
+							assassin.insert({"properties":{"killer":"jobass", "killed":killed, "confirmed":"pending"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
+								if(!err3) {
+									res.send("Kill Submitted");
+								}
+								else {
+									res.send("err3");
+								}
+							});
+						}
+						else {
+							res.send("err2");
+						}
+					});
+				}
+			});
+		}
+		else {
+			res.send("err");
+		}
+	});
 });
 
 app.get('/playerlist', function(req, res) {
@@ -289,6 +322,7 @@ app.get('/welcomehome', function(req, res) {
 		res.send(JSON.stringify(targets));
 });
 
+//17,576,000 uniqueid possibilites meaning there is a chance that 2 people get the same one
 app.get('/signingup', function(req, res) {
 	if(req.param('pass') != req.param('pass2')) {
 		res.redirect("/signupfailed");
