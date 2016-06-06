@@ -69,8 +69,8 @@ app.get('/', function(req, res){
 });
 
 app.get('/home', function(req, res){
-    
-    res.render('home.jade', {title: "HOME"});
+    user = req.param('user');
+    res.render('home.jade', {"title": "HOME", "user": user});
 });
 
 // Bind the root '/' URL to the login page
