@@ -207,8 +207,11 @@ app.get('/sendingkill', function(req, res) {
 	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
 		if(!err) {
 			//searches through all players to find entered in unique id
+			var count = 0;
+			var found = false;
 			body.rows.forEach(function(row) {
-				if(row.doc.uniqueid == "abc125") {
+				count++;
+				if(row.doc.uniqueid == "abc122") {
 					//gets the document for the found unique id
 					assassin.get(row.doc._id, function(err2, body2) {
 						if(!err2) {
@@ -253,6 +256,10 @@ app.get('/sendingkill', function(req, res) {
 							res.send("err2");//error if no docs found under row.doc._id (shouldn't ever hit this error)
 						}
 					});
+					found = true;
+				}
+				else if(count == body.rows.length && !found) {
+					res.send("unique id not found");
 				}
 			});
 		}
