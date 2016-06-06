@@ -81,7 +81,7 @@ app.get('/home', function(req, res){
 				// expose the user to the template
 				res.locals.user = user;
 				// render the player page
-    		res.render('home.jade', {"title": "HOME", "user": user});
+    		res.render('home.jade', {"title": "HOME"});
 			}
 		});
 	} else {
