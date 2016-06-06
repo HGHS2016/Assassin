@@ -36,9 +36,11 @@ function createTeamTableRow(name, player1, player2, target, toggle) {
     }
 }
 
-
-function createTargetTableRow(name, target, time) {
-    return '<tr><td>' + name + '</td><td class="center">' + target.toUpperCase() + '</td><td>' + time + '</td></tr>';
+function createTargetTableRow(name, player1, player2, target, toggle) {
+    if(toggle){
+      return '<tr class= "red darken-3"><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + target + '</td></tr>';
+    }
+    return '<tr><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + target + '</td></tr>';
 }
 
 /**
@@ -79,7 +81,7 @@ function populateTeamTable() {
  */
 function populateTargetTable() {
     var table = $("#target_table tr");
-    var toggle = false;
+    var toggle = true;
     $.get("/teamlist", function(data) {
 	var teams = JSON.parse(data);
 	var html = '';
@@ -87,7 +89,7 @@ function populateTargetTable() {
 	    if (team.status != "dead") {
 		toggle = !toggle;
 		console.log("Team is: " + JSON.stringify(team));
-		html = html.concat(createTeamTableRow(team.name, team.player1.name, team.player2.name, team.target.current, toggle));
+		html = html.concat(createTargetTableRow(team.name, team.player1.name, team.player2.name, team.target.current, toggle));
 	    }
 	});
 	table.last().after(html);
@@ -97,4 +99,3 @@ function populateTargetTable() {
 $(populatePlayerTable);
 $(populateTeamTable);
 $(populateTargetTable);
-
