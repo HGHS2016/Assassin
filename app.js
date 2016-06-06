@@ -67,7 +67,9 @@ app.use(session({
 
 // Bind the root '/' URL to the login page
 app.get('/', function(req, res){
-	res.render('welcome.jade', {title: "LET'S PLAY ASSASSINS"});
+	res.render('welcome.jade', {pageData: {
+		"title": "LET'S PLAY ASSASSINS",
+	}});
 });
 
 app.get('/home', function(req, res){
@@ -83,7 +85,7 @@ app.get('/home', function(req, res){
 				// render the player page
 
     		res.render('home.jade', {pageData: {
-					"title": "HOME",
+					title : "HOME",
 					"user" : user,
 				}});
 				}
@@ -94,7 +96,10 @@ app.get('/home', function(req, res){
 });
 
 app.get('/login', function(req, res){
-	res.render('login.jade', {pageData: {title: "LET'S PLAY ASSASSINS"}, failed: 'false'});
+	res.render('login.jade', {pageData: {
+		title: "LET'S PLAY ASSASSINS"},
+		failed: 'false'
+	});
 });
 
 app.get('/loggingin', function(req, res) {
@@ -114,13 +119,19 @@ app.get('/loggingin', function(req, res) {
 		}
 	    }
 	    else {
-		console.log("failed");
-		res.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", error: 'Invalid username or password.'}});
+				console.log("failed");
+				res.render('login.jade', {pageData: {
+					title: "LET'S TRY TO LOGIN AGAIN",
+					error: 'Invalid username or password.'
+				}});
 	    }
 	}
 	else {
 	    console.log("failed");
-	    res.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", error: 'Invalid username or password.'}});
+	    res.render('login.jade', {pageData: {
+				title: "LET'S TRY TO LOGIN AGAIN",
+				error: 'Invalid username or password.'
+			}});
 	}
     });
     //res.send("Hi");
@@ -159,15 +170,23 @@ app.get('/loggingin', function(req, res) {
 });*/
 
 app.get('/signup', function(req, res){
-	res.render('signup.jade', {pageData: {title: "Sign Up!", failed: false}});
+	res.render('signup.jade', {pageData: {
+			title: "Sign Up!",
+			failed: false
+		}});
 });
 
 app.get('/signupfailed', function(req, res){
-	res.render('signup.jade', {pageData: {title: "Sign Up Failed!", failed: true}});
+	res.render('signup.jade', {pageData: {
+		title: "Sign Up Failed!",
+		failed: true
+	}});
 });
 
 app.get('/create', function(req, res){
-	res.render('create.jade', {title: "Make a Game!"});
+	res.render('create.jade', {pageData: {
+		title: "Make a Game!"
+	}});
 });
 
 app.get('/god', function(req, res){
@@ -199,7 +218,9 @@ app.get('/createTeam', function(req, res){
 });
 
 app.get('/kill', function(req, res){
-	res.render('kill.jade', {title: "LET'S KILL"});
+	res.render('kill.jade', {pageData: {
+		title: "LET'S KILL"
+	}});
 });
 
 
