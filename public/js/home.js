@@ -6,10 +6,9 @@
 function populateMyTarget() {
     var span = $("#mytarget");
     var toggle = false;
-    var user = "{{ user }}";
-    console.log(user);
-    
-    $.get("/mytarget?user=jastillman", function(data) {
+    var req = "/mytarget?user=" + local_data.user;
+
+    $.get(req, function(data) {
 	var target = JSON.parse(data);
 	var html = '';
 	if (target)
