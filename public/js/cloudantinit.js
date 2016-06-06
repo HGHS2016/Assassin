@@ -1,12 +1,19 @@
 module.exports.loaddata = reinitdata
 module.exports.computeteams = computeteams
 module.exports.computeplayers = computeplayers
+module.exports.computemytarget = computemytarget
 
 var csv = require('csv-array');
 var HashMap = require('hashmap');
 
 var local;
 var assassin;
+
+function computemytarget(cloudant, user, response) {
+    local = cloudant;
+    target = {"name":"pineapple","player1":{"name":"Jaret Stillman","status":"alive"},"player2":{"name":"Jeff Liu","status":"alive"}};
+    response.send(JSON.stringify(target));
+};
 
 function computeplayers(cloudant, response) {
     local = cloudant;
@@ -73,7 +80,7 @@ function afterteam(err, body) {
 	};
 	
 	if (row.key.field == 'player2') {
-	    teamrow.player2 = row.doc.first.concat(' ').concat(row.doc.last);
+	    teamrow.player2.name = row.doc.first.concat(' ').concat(row.doc.last);
 	    teamrow.player2.status = row.doc.status;
 	};
 

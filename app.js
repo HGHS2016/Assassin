@@ -7,6 +7,8 @@
 var express = require('express');
 var app = express();
 var session = require('client-sessions');
+var user = "";
+var pass = "";
 
 //var http = require('http')
 
@@ -67,7 +69,8 @@ app.get('/', function(req, res){
 });
 
 app.get('/home', function(req, res){
-	res.render('home.jade', {title: "HOME"});
+    
+    res.render('home.jade', {title: "HOME"});
 });
 
 // Bind the root '/' URL to the login page
@@ -92,7 +95,9 @@ app.get('/create', function(req, res){
 });
 
 app.get('/god', function(req, res){
-	res.render('god.jade', {title: "gods view!"});
+    user = req.param('user');
+    pass = req.param('pass');
+    res.render('god.jade', {title: "gods view!"});
 });
 
 app.get('/createTeam', function(req, res){
@@ -181,6 +186,10 @@ app.get('/targetlist', function(request, response) {
     datamodule.computeteams(cloudant, response)
 });
 
+app.get('/mytarget', function(request, response) {
+    datamodule.computemytarget(cloudant, user, response)
+});
+
 //    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
 //    targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
 
@@ -195,27 +204,29 @@ app.get('/welcomehome', function(request, response) {
 });
 
 app.get('/loggingin', function(request, response) {
-	assassin.get(request.param('user'), function(err, body) {
-		if(!err) {
-			if(body.password == request.param('pass')) {
-				if(body.role == "god") {
-					response.redirect("/god");
-				}
-				else if(body.role == "assassin") {
-					response.redirect("/home");
-				}
-			}
-			else {
-				console.log("failed");
-				response.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", error: 'Invalid username or password.'}});
-			}
+    user = request.param('user');
+    pass = request.param('pass');
+    assassin.get(request.param('user'), function(err, body) {
+	if(!err) {
+	    if(body.password == request.param('pass')) {
+		if(body.role == "god") {
+		    response.redirect("/god?user="+user);
 		}
-		else {
-			console.log("failed");
-			response.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", error: 'Invalid username or password.'}});
+		else if(body.role == "assassin") {
+		    response.redirect("/home?user="+user);
 		}
-	});
-	//response.send("Hi");
+	    }
+	    else {
+		console.log("failed");
+		response.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", error: 'Invalid username or password.'}});
+	    }
+	}
+	else {
+	    console.log("failed");
+	    response.render('login.jade', {pageData: {title: "LET'S TRY TO LOGIN AGAIN", error: 'Invalid username or password.'}});
+	}
+    });
+    //response.send("Hi");
 });
 
 //login should use post, but this is not working

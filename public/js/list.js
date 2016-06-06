@@ -97,3 +97,4 @@ function populateTargetTable() {
 $(populatePlayerTable);
 $(populateTeamTable);
 $(populateTargetTable);
+
