@@ -227,33 +227,58 @@ app.get('/kill', function(req, res){
 app.get('/sendingkill', function(req, res) {
 	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
 		if(!err) {
+			//searches through all players to find entered in unique id
 			body.rows.forEach(function(row) {
-				//req.param('uniqueid')) {
-				//console.log("OTHER: " + body.uniqueid);
-				//console.log("BODY: " + JSON.stringify(body));
 				if(row.doc.uniqueid == "abc125") {
+					//gets the document for the found unique id
 					assassin.get(row.doc._id, function(err2, body2) {
 						if(!err2) {
-							console.log("U ACTUALLY FOUND THE KILLED DOCUMENT");
-							//res.locals.user
-							assassin.insert({"properties":{"type":"kill", "killer":"jobass", "killed":body2._id, "confirmed":"pending"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
-								if(!err3) {
-									res.send("Kill Submitted");
+							//finds path for geo view to check to see if the point is in any safezones
+							var opts = {};
+							opts.db = "assassin";
+							opts.method = "get";
+							opts.content_type = "json";
+							opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-10+10)&include_docs=true";
+							cloudant.request(opts, function(err,body) {
+								if (err) {
+									console.log("[cloudant error" + JSON.stringify(err));
+									return;
 								}
+								//goes here if there are no safezone conflicts (i.e. array of safezone conflicts is 0)
+								if(body.rows.length == 0) {
+									//res.locals.user
+									assassin.insert({"properties":{"type":"kill", "killer":"jobass", "killed":body2._id, "confirmed":"true", "notes":"none"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
+										if(!err3) {
+											res.send("Kill Submitted");
+										}
+										else {
+											res.send("err3");
+										}
+									});
+								}
+								//goes here if there is/are safezone conflicts
 								else {
-									res.send("err3");
+									//res.locals.user
+									assassin.insert({"properties":{"type":"kill", "killer":"jobass", "killed":body2._id, "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
+										if(!err3) {
+											res.send("Kill Submitted");
+										}
+										else {
+											res.send("err3");
+										}
+									});
 								}
 							});
 						}
 						else {
-							res.send("err2");
+							res.send("err2");//error if no docs found under row.doc._id (shouldn't ever hit this error)
 						}
 					});
 				}
 			});
 		}
 		else {
-			res.send("err");
+			res.send("err");//error for unfound view? (shouldn't ever hit this error)
 		}
 	});
 });
@@ -268,7 +293,7 @@ app.get('/badkill', function(req, res) {
 		opts.method = "get";
 		opts.content_type = "json";
 		opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-73.757322+41.174823)&include_docs=true";
-		cloudant.req(opts, function(err,body) {
+		cloudant.request(opts, function(err,body) {
 	if (err) {
 			console.log("[badkill, cloudant error" + JSON.stringify(err));
 			return;
@@ -283,7 +308,7 @@ app.get('/goodkill', function(req, res) {
 		opts.method = "get";
 		opts.content_type = "json";
 		opts.path = "_design/location/_geo/newGeoIndex?g=point(10+10)&include_docs=true";
-		cloudant.req(opts, function(err,body) {
+		cloudant.request(opts, function(err,body) {
 	if (err) {
 			console.log("[goodkill, cloudant error" + JSON.stringify(err));
 			return;
@@ -331,6 +356,7 @@ app.get('/targetlist', function(req, res) {
 });
 
 app.get('/mytarget', function(req, res) {
+	  user = req.param('user');
     datamodule.computemytarget(cloudant, user, res)
 });
 

@@ -11,20 +11,39 @@ var assassin;
 
 function computemytarget(cloudant, user, response) {
     local = cloudant;
-    target = {"name":"pineapple","player1":{"name":"Jaret Stillman","status":"alive"},"player2":{"name":"Jeff Liu","status":"alive"}};
-    response.send(JSON.stringify(target));
+    $.get("/createteam", function(data) {  // fix this to teh correct url eventually
+      var players = JSON.parse(data);
+
+      player = players[0];
+      i = 0;
+      while (player.id != user) { i = i+1; player = players[i] }
+      // player is the one you want!
+      $.get("/targetlist", function(data) {
+      var teams = JSON.parse(data);
+      team = teams[0];
+      i=0
+      while (team.name != player.team) { i = i+1; team = team[i]}
+      // player is the one, team is the one, and team.target.curret is the current target
+      //set your response like html concat
+/*
+    html = html.concat(createTargetTableRow(team.name, team.player1.name, team.player2.name, team.target.current, toggle));
+*/
+      target = {"name":"pineapple","player1":{"name":"Jaret Stillman","status":"alive"},"player2":{"name":"Jeff Liu","status":"alive"}};
+      response.send(JSON.stringify(target));
+})
+});
 };
 
 function computeplayers(cloudant, response) {
     local = cloudant;
     assassin = local.db.use('assassin');
     assassin.view('team', 'players-on-teams', {include_docs: false}, function (err, playersonteams) {
-	if(err) return err;
-	assassin.view('players', 'players-index', {include_docs: true}, function(err, allplayers) {
-	    if(err) return err;
-	    var players = addteamstoplayers(playersonteams, allplayers);
-	    response.send(JSON.stringify(players));
-	});
+  	  if(err) return err;
+      assassin.view('players', 'players-index', {include_docs: true}, function(err, allplayers) {
+        if(err) return err;
+	      var players = addteamstoplayers(playersonteams, allplayers);
+	          response.send(JSON.stringify(players));
+	       });
     });
 }
 
@@ -32,7 +51,7 @@ function addteamstoplayers(playersonteams, allplayers){
     var allplayerlist = [];
     var playersonteamshash = new HashMap();
     var playerteam;
-    
+
     playersonteams.rows.forEach(function(row) {
 	playersonteamshash.set(row.key.player, {"player": row.key.player, "team": row.id});
     });
@@ -78,7 +97,7 @@ function afterteam(err, body) {
 	    teamrow.player1.name = row.doc.first.concat(' ').concat(row.doc.last);
 	    teamrow.player1.status = row.doc.status;
 	};
-	
+
 	if (row.key.field == 'player2') {
 	    teamrow.player2.name = row.doc.first.concat(' ').concat(row.doc.last);
 	    teamrow.player2.status = row.doc.status;
@@ -107,7 +126,7 @@ function organizeTeams(teams){
     ret.sort();
     var cur = 0;
     var nxt = 1;
-    var numberOfTeams = ret.length; 
+    var numberOfTeams = ret.length;
     while(cur < ret.length-1){
 	if(ret[cur].target.original != ret[nxt].name){
 	    ret[nxt] = teams.get(ret[cur].target.original);
@@ -209,4 +228,3 @@ function insertteams(data) {
 				console.log(body);
 		});
 	})}
-
