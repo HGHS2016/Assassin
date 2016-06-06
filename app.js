@@ -81,8 +81,12 @@ app.get('/home', function(req, res){
 				// expose the user to the template
 				res.locals.user = user;
 				// render the player page
-    		res.render('home.jade', {"title": "HOME"});
-			}
+
+    		res.render('home.jade', {pageData: {
+					"title": "HOME",
+					"user" : user,
+				}});
+				}
 		});
 	} else {
 		res.redirect('/login');
@@ -177,7 +181,10 @@ app.get('/god', function(req, res){
 					// expose the user to the template
 					res.locals.user = user;
 					// render the god page
-					res.render('god.jade', {title: "gods view!"});
+					res.render('god.jade', {pageData: {
+						"title": "gods view!",
+						"user" : user,
+					}});
 				}
 			});
 		} else {
@@ -194,6 +201,7 @@ app.get('/createTeam', function(req, res){
 app.get('/kill', function(req, res){
 	res.render('kill.jade', {title: "LET'S KILL"});
 });
+
 
 app.get('/sendingkill', function(req, res) {
 	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
