@@ -86,7 +86,7 @@ app.get('/home', function(req, res){
 					"title": "HOME",
 					"user" : user,
 				}});
-			}
+				}
 		});
 	} else {
 		res.redirect('/login');
@@ -202,11 +202,7 @@ app.get('/kill', function(req, res){
 	res.render('kill.jade', {title: "LET'S KILL"});
 });
 
-<<<<<<< HEAD
-app.get('/sendingkill', function(req, res){
-	//console.log(req.getLat());
-	res.send("HI");
-=======
+
 app.get('/sendingkill', function(req, res) {
 	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
 		if(!err) {
@@ -239,7 +235,6 @@ app.get('/sendingkill', function(req, res) {
 			res.send("err");
 		}
 	});
->>>>>>> e00b4b6bade34981743cd63c61557480cd87377a
 });
 
 app.get('/playerlist', function(req, res) {
