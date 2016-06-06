@@ -71,8 +71,22 @@ app.get('/', function(req, res){
 });
 
 app.get('/home', function(req, res){
-    user = req.param('user');
-    res.render('home.jade', {"title": "HOME", "user": user});
+	if (req.userSession && req.userSession.user) { //Check if session exists
+		// lookup the user in the DB by pulling their username from session
+		assassin.get(req.userSession.user, function(err, body){
+			if(err){
+				req.userSession.reset();
+				req.redirect('/login')
+			} else {
+				// expose the user to the template
+				res.locals.user = user;
+				// render the player page
+    		res.render('home.jade', {"title": "HOME", "user": user});
+			}
+		});
+	} else {
+		res.redirect('/login');
+	}
 });
 
 app.get('/login', function(req, res){
@@ -87,7 +101,7 @@ app.get('/loggingin', function(req, res) {
 	    if(body.password == req.param('pass')) {
 				// sets a cookie with the user's info
 				req.userSession.user = user;
-				console.log(req.userSession);
+				req.userSession.role = body.role;
 		if(body.role == "god") {
 		    res.redirect("/god");
 		}
@@ -161,7 +175,11 @@ app.get('/god', function(req, res){
 					req.redirect('/login')
 				} else {
 					// expose the user to the template
+					console.log(user);
+					console.log(res.locals.user);
 					res.locals.user = user;
+					console.log(res.locals.user);
+					console.log(user);
 					// render the god page
 					res.render('god.jade', {title: "gods view!"});
 				}
@@ -173,6 +191,7 @@ app.get('/god', function(req, res){
 
 app.get('/createTeam', function(req, res){
 	//res.render('newteam.jade', {title: "Create a Team"});
+	console.log(res.locals.user);
 	datamodule.computeplayers(cloudant, res)
 });
 
@@ -303,6 +322,10 @@ app.get('/signingup', function(req, res) {
 app.get('/initdata', function(req,res) {
 		datamodule.loaddata(cloudant, function() {
 	res.send('data loading');})
+});
+
+app.get('/logout', function(req,res){
+	res.redirect('/');
 });
 
 // start server on the specified port and binding host

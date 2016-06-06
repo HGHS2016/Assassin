@@ -2,7 +2,7 @@
 //Navbar
 nav
 	div(class="nav-wrapper blue-grey lighten-1")
-		a(href="#" class="brand-logo") God: 
+		a(href="#" class="brand-logo") God: #{user}
 		- var btn = ['waves-effect', 'waves-dark', 'btn', 'orange', 'darken-3']
 		- var links = ['white-text']
 		a(href="#" data-activates="mobile-demo" class="button-collapse logo")
@@ -19,7 +19,7 @@ nav
 					li
 						a(href="/createTeam" class = links) Create Team
 					li
-						a(href="/" class=btn class=links) Logout
+						a(href="/logout" class=btn class=links) Logout
 				+navButtons
 			ul(class="side-nav indigo lighten-2" id="mobile-demo")
 				+navButtons
