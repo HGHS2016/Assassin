@@ -7,7 +7,6 @@
 var express = require('express');
 var app = express();
 var session = require('client-sessions');
-var user = "";
 var pass = "";
 
 //var http = require('http')
@@ -80,7 +79,7 @@ app.get('/home', function(req, res){
 				req.userSession.reset();
 				req.redirect('/login')
 			} else {
-				var user = res.userSession.user
+				var user = req.userSession.user
 				// expose the user to the template
 				res.locals.user = user;
 				// render the player page
