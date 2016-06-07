@@ -264,7 +264,6 @@ app.get('/sendingkill', function(req, res) {
 							opts.db = "assassin";
 							opts.method = "get";
 							opts.content_type = "json";
-							//opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-10+10)&include_docs=true";
 							opts.path = "_design/location/_geo/newGeoIndex?g=POINT(" + longlat + ")&include_docs=true";
 							cloudant.request(opts, function(err,body) {
 								if (err) {
@@ -449,7 +448,7 @@ app.get('/signingup', function(req, res) {
 		}
 		assassin.insert({password:req.query['pass'], uniqueid:uid, type:"player", first:req.query['first'], last:req.query['last'], role:"assassin", status:"alive"}, id, function(err, body, header) {
 			if(!err) {
-				res.redirect("/home");
+				res.redirect("/login");
 			}
 			else {
 				res.redirect("/signupfailed");
