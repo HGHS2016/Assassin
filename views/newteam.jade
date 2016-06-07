@@ -8,15 +8,17 @@ html(lang="en")
 		include ./templates/godNav.jade
 
 		div.row
+
 			form(class="col s12")
 				div(class="input-field col s12 m6")
-					select
+					select(id="p1")
 						option(value="" disabled selected)
 					input(type="text" id="teamname" placeholder="Team Name" autocomplete="off")
 				div(class="input-field col s12 m6")
 					select(id="p2")
 						option(value="" disabled selected)
 					button(type="submit" class="btn waves-effect waves-light blue-grey white-text") Submit Team
+		script(type="text/javascript" src="js/newteam.js")
 		script.
 			$(document).ready(function() {
 				$('select').material_select();
