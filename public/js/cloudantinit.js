@@ -5,45 +5,60 @@ module.exports.computemytarget = computemytarget
 
 var csv = require('csv-array');
 var HashMap = require('hashmap');
+var app = require('express');
 
 var local;
 var assassin;
 
 function computemytarget(cloudant, user, response) {
     local = cloudant;
-    $.get("/createteam", function(data) {  // fix this to teh correct url eventually
-      var players = JSON.parse(data);
+    computeplayersJSON(function (players) {
+	console.log(players);
+	var player = players[0];
+	var i = 0;
 
-      player = players[0];
-      i = 0;
-      while (player.id != user) { i = i+1; player = players[i] }
-      // player is the one you want!
-      $.get("/targetlist", function(data) {
-      var teams = JSON.parse(data);
-      team = teams[0];
-      i=0
-      while (team.name != player.team) { i = i+1; team = team[i]}
-      // player is the one, team is the one, and team.target.curret is the current target
-      //set your response like html concat
-/*
-    html = html.concat(createTargetTableRow(team.name, team.player1.name, team.player2.name, team.target.current, toggle));
-*/
-      target = {"name":"pineapple","player1":{"name":"Jaret Stillman","status":"alive"},"player2":{"name":"Jeff Liu","status":"alive"}};
-      response.send(JSON.stringify(target));
-})
-});
+	while (player.id != user && i < players.length-1) { i = i+1; player = players[i] };
+	if (i == players.length-1) {console.log("player " + user + "not found");  response.send("");}
+
+	// player is the one you want!
+	computeteamsJSON( function(teams) {
+	    console.log(teams);
+	    var team = teams[0];
+	    console.log("Team =", team);
+	    var j=0;
+
+	    // find the player's team
+	    while (team.name != player.team && j < teams.length-1) { j = j+1; team = teams[j]; console.log(team);}; 
+	    if (j == teams.length-1) {console.log("no team found for player" + JSONstringify(player));
+				     response.send("");}
+	    // find the team's target information
+	    j=0;
+	    target = teams[0];
+	    while (target.name != team.target.current && j < teams.length-1) { j = j+1; target = teams[j]}; 
+	    if (j == teams.length-1) response.send("");
+//	    target = {"name":"pineapple","player1":{"name":"Jaret Stillman","status":"alive"},"player2":{"name":"Jeff Liu","status":"alive"}};
+	    console.log(JSON.stringify(target));
+	    response.send(JSON.stringify(target));
+	}); // get targetlist
+    }); // get playerlist
 };
 
 function computeplayers(cloudant, response) {
     local = cloudant;
+    computeplayersJSON( function (players) {
+	response.send(JSON.stringify(players));
+    });
+}
+
+function computeplayersJSON(callback) {
     assassin = local.db.use('assassin');
     assassin.view('team', 'players-on-teams', {include_docs: false}, function (err, playersonteams) {
-  	  if(err) return err;
-      assassin.view('players', 'players-index', {include_docs: true}, function(err, allplayers) {
-        if(err) return err;
-	      var players = addteamstoplayers(playersonteams, allplayers);
-	          response.send(JSON.stringify(players));
-	       });
+  	if(err) return err;
+	assassin.view('players', 'players-index', {include_docs: true}, function(err, allplayers) {
+            if(err) return err;
+	    var players = addteamstoplayers(playersonteams, allplayers);
+	    callback(players);
+	});
     });
 }
 
@@ -68,15 +83,19 @@ function addteamstoplayers(playersonteams, allplayers){
     return allplayerlist;
 }
 
-
 function computeteams(cloudant, response) {
     local = cloudant;
+    computeteamsJSON( function (teams) {
+	response.send(JSON.stringify(teams));
+    });
+}
+
+function computeteamsJSON(callback) {
     assassin = local.db.use('assassin');
     assassin.view('team', 'team-index', {include_docs: true}, function returnfromcloudant(err, body) {
 	if(err) return err;
 	teams = afterteam(err, body);
-	console.log("Teams = " + JSON.stringify(teams));
-	response.send(JSON.stringify(teams));
+	callback(teams);
     });
 }
 
