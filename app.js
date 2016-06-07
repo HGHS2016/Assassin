@@ -103,11 +103,11 @@ app.get('/login', function(req, res){
 });
 
 app.get('/loggingin', function(req, res) {
-    var user = req.param('user');
-    var pass = req.param('pass');
-    assassin.get(req.param('user'), function(err, body) {
+    var user = req.query['user'];
+    var pass = req.query['pass'];
+    assassin.get(req.query['user'], function(err, body) {
 	if(!err) {
-	    if(body.password == req.param('pass')) {
+	    if(body.password == req.query['pass']) {
 				// sets a cookie with the user's info
 				req.userSession.user = user;
 				req.userSession.role = body.role;
@@ -364,7 +364,7 @@ app.get('/targetlist', function(req, res) {
 });
 
 app.get('/mytarget', function(req, res) {
-    user = req.param('user');
+    user = req.query['user'];
     datamodule.computemytarget(cloudant, user, res)
 });
 
@@ -374,7 +374,7 @@ app.get('/mytarget', function(req, res) {
 
 
 app.get('/welcomehome', function(req, res) {
-	console.log("THIS IS THE LOG FOR THE req: " + req.param('user'));
+	console.log("THIS IS THE LOG FOR THE req: " + req.query['user']);
 		var targets = [];
 		targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
 		targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
@@ -383,11 +383,11 @@ app.get('/welcomehome', function(req, res) {
 
 //17,576,000 uniqueid possibilites meaning there is a chance that 2 people get the same one
 app.get('/signingup', function(req, res) {
-	if(req.param('pass') != req.param('pass2')) {
+    if(req.query['pass'] != req.query['pass2']) {
 		res.redirect("/signupfailed");
 	}
 	else {
-		var id = req.param('user');
+		var id = req.query['user'];
 		var d1 = Math.floor(Math.random() * 10).toString();
 		var d2 = Math.floor(Math.random() * 10).toString();
 		var d3 = Math.floor(Math.random() * 10).toString();
@@ -396,7 +396,7 @@ app.get('/signingup', function(req, res) {
 		for(var i = 0; i <= 2; i++) {
 			uid = possibleletters.charAt(Math.floor(Math.random() * 26)).concat(uid);
 		}
-		assassin.insert({password:req.param('pass'), uniqueid:uid, type:"player", first:req.param('first'), last:req.param('last'), role:"assassin", status:"alive"}, id, function(err, body, header) {
+		assassin.insert({password:req.query['pass'], uniqueid:uid, type:"player", first:req.query['first'], last:req.query['last'], role:"assassin", status:"alive"}, id, function(err, body, header) {
 			if(!err) {
 				res.redirect("/home");
 			}
