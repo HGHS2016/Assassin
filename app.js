@@ -237,7 +237,7 @@ app.get('/sendingkill', function(req, res) {
 			var found = false;
 			body.rows.forEach(function(row) {
 				count++;
-				if(row.doc.uniqueid == "abc122") {
+				if(row.doc.uniqueid == req.param("DeceasedID")) {
 					//gets the document for the found unique id
 					assassin.get(row.doc._id, function(err2, body2) {
 						if(!err2) {
@@ -254,8 +254,7 @@ app.get('/sendingkill', function(req, res) {
 								}
 								//goes here if there are no safezone conflicts (i.e. array of safezone conflicts is 0)
 								if(body.rows.length == 0) {
-									//res.locals.user
-									assassin.insert({"properties":{"type":"kill", "killer":"jobass", "killed":body2._id, "confirmed":"true", "notes":"none"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
+									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "confirmed":"true", "notes":"none"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
 										if(!err3) {
 											res.send("Kill Submitted");
 										}
@@ -266,8 +265,7 @@ app.get('/sendingkill', function(req, res) {
 								}
 								//goes here if there is/are safezone conflicts
 								else {
-									//res.locals.user
-									assassin.insert({"properties":{"type":"kill", "killer":"jobass", "killed":body2._id, "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
+									assassin.insert({"properties":{"type":"kill", "killer":userSession.user, "killed":body2._id, "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
 										if(!err3) {
 											res.send("Kill Submitted");
 										}
