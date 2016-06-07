@@ -1,22 +1,26 @@
 var x;
 function loader(){
-  var x = document.getElementById("coords");
+  x = document.getElementById("coords");
+  console.log(x);
+  console.log(x.value);
 }
 function logPosition(callback) {
-    console.log(x);
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function showPosition(position) {
-          document.getElementById("coords").value = position.coords.latitude + " N " + position.coords.longitude + " S ";
+          x.value = position.coords.latitude + " N " + position.coords.longitude + " S ";
+          console.log(x.value);
         });
     } else {
-        document.getElementById("coords").value = "Geolocation is not supported by this browser.";
+        x.value = "Geolocation is not supported by this browser.";
+        console.log(x.value);
     }
 }
 
+/**
 function showPosition(position) {
     x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
 }
-/**
+
 function logPosition(callback) {
   if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function showPosition(position) {
@@ -29,10 +33,8 @@ function logPosition(callback) {
 }
 */
 function clear(){
-  console.log('boop');
-  var clear = "";
-  document.getElementById("coords").value = "hi";
-  callback(clear);
+  x.value = '';
 }
 
 $(loader);
+$(clear);
