@@ -9,12 +9,12 @@
 	"express": "4.13.x",
 	"cfenv": "1.0.x",
 	"cloudant" : "*",
-  "jade" : ">=1.1.4",
+	"jade" : ">=1.1.4",
 	"pug"  : "*",
-  "csv-array" : "*",
+	"csv-array" : "*",
 	"hashmap" : "*",
 	"moment" : "*",
-  "client-sessions" : "*"
+	"client-sessions" : "*"
     },
     "repository": {},
     "engines": {

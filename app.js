@@ -363,7 +363,7 @@ app.get('/targetlist', function(req, res) {
 });
 
 app.get('/mytarget', function(req, res) {
-	  user = req.param('user');
+    user = req.param('user');
     datamodule.computemytarget(cloudant, user, res)
 });
 
