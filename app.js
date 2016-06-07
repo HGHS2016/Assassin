@@ -212,8 +212,14 @@ app.get('/god', function(req, res){
 		}
 });
 
-app.get('/createTeam', function(req, res){
-	datamodule.unassignedplayers(cloudant, res)
+app.get('/unassignedplayers', function(req, res) {
+    datamodule.unassignedplayers(cloudant, res);
+});
+	
+app.get('/createTeam', function(req, res) {
+    res.render('newteam.jade', {pageData: {
+	    title: "Create a Team"
+    }}); 
 });
 
 app.get('/kill', function(req, res){
