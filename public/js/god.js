@@ -1,4 +1,5 @@
 /**
+ * This file is Dead until further notice, replaced with list.js and gods.js
  * Player List
  */
 
@@ -97,4 +98,3 @@ function populateTargetTable() {
 $(populatePlayerTable);
 $(populateTeamTable);
 $(populateTargetTable);
-
