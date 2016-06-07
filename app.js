@@ -193,23 +193,34 @@ app.get('/god', function(req, res){
 		if (req.userSession && req.userSession.user) { //Check if session exists
 			// lookup the user in the DB by pulling their username from session
 			assassin.get(req.userSession.user, function(err, body){
-				if(err || !req.userSession.user){
+				if(err){
 					req.userSession.reset();
 					req.redirect('/login')
 				} else {
-					var user = req.userSession.user;
-					// expose the user to the template
-					res.locals.user = user;
-					// render the god page
-					res.render('god.jade', {pageData: {
-						"title": "gods view!",
-						"user" : user,
-					}});
+					if(body.role == "assassin") {
+						req.redirect('/home');
+					} else {
+						var user = req.userSession.user;
+						// expose the user to the template
+						res.locals.user = user;
+						// render the god page
+						res.render('god.jade', {pageData: {
+							"title": "gods view!",
+							"user" : user,
+						}});
+					}
 				}
 			});
 		} else {
 			res.redirect('/login');
 		}
+});
+
+app.get('/test', function(req, res){
+	res.render('test.jade', {pageData: {
+		"title" : "test",
+		"user"  : "non-existant",
+	}})
 });
 
 app.get('/unassignedplayers', function(req, res) {
@@ -218,15 +229,33 @@ app.get('/unassignedplayers', function(req, res) {
 
 app.get('/createTeam', function(req, res) {
     res.render('newteam.jade', {pageData: {
-	    title: "Create a Team"
+	    title: "Create a Team",
+			user: req.userSession.user,
     }});
 });
 
 app.get('/kill', function(req, res){
-	res.render('kill.jade', {pageData: {
-		title: "LET'S KILL"
-	}});
-});
+	if(req.userSession && req.userSession.user) { //Check if session exists
+		// lookup the user in the DB by pulling their username from session
+		assassin.get(req.userSession.user, function(err, body){
+			if(err){
+				req.userSession.reset();
+				req.redirect('/login')
+			} else {
+					if(body.role == "god"){
+						req.redirect
+					}
+					var user = req.userSession.user;
+					// expose the user to the template
+					res.locals.user = user;
+					// render the kill page
+					res.render('kill.jade', {pageData: {
+						title: "LET'S KILL"
+					}});
+				}
+			});
+		}
+	});
 
 app.get('/resettargets', function(req, res){
 	assassin.view('team', 'teams', {include_docs: true}, function(err, body) {
@@ -288,7 +317,6 @@ app.get('/sendingkill', function(req, res) {
 							opts.db = "assassin";
 							opts.method = "get";
 							opts.content_type = "json";
-							//opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-10+10)&include_docs=true";
 							opts.path = "_design/location/_geo/newGeoIndex?g=POINT(" + longlat + ")&include_docs=true";
 							cloudant.request(opts, function(err,body) {
 								if (err) {
@@ -335,6 +363,36 @@ app.get('/sendingkill', function(req, res) {
 		}
 	});
 });
+
+app.get('/confirmkill', function(req, res) {
+	assassin.view('kill', 'kill-index', {include_docs: true},  function(err, body) {
+		if(!err) {
+			var kills = [];
+			var curkill = body.rows[0].key.kill;
+			var killrow = {};
+			killrow._id = curkill;
+			body.rows.forEach(function(row) {
+				if (curkill != row.key.kill) {
+					kills.push(killrow);
+					curkill = row.key.kill;
+					killrow = {};
+					killrow.name = curkill;
+				}
+				if (row.key.field == 'killer')
+					killrow.killer = row.doc.first.concat(' ').concat(row.doc.last);
+				if (row.key.field == 'killed')
+					killrow.killed = row.doc.first.concat(' ').concat(row.doc.last);
+				if (row.key.field == 'about') {
+					killrow.confirmed = row.doc.properties.confirmed;
+					killrow.notes = row.doc.properties.notes;
+				}
+			});
+			kills.push(killrow);
+			res.send(JSON.stringify(kills));
+		}
+	});
+});
+
 
 app.get('/playerlist', function(req, res) {
 	datamodule.computeplayers(cloudant, res)
@@ -443,7 +501,7 @@ app.get('/signingup', function(req, res) {
 		}
 		assassin.insert({password:req.query['pass'], uniqueid:uid, type:"player", first:req.query['first'], last:req.query['last'], role:"assassin", status:"alive"}, id, function(err, body, header) {
 			if(!err) {
-				res.redirect("/home");
+				res.redirect("/login");
 			}
 			else {
 				res.redirect("/signupfailed");
