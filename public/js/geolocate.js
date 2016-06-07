@@ -9,7 +9,7 @@ function logPosition(callback) {
           document.getElementById("coords").value = position.coords.latitude + " N " + position.coords.longitude + " S ";
         });
     } else {
-        document.getElementById("location").value = "Geolocation is not supported by this browser.";
+        document.getElementById("coords").value = "Geolocation is not supported by this browser.";
     }
 }
 
