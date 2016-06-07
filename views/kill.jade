@@ -4,8 +4,11 @@ html(lang = 'en')
     include ./templates/header.jade
     include ./templates/globalVar.jade
   body(class = bgColor)
-    script(type = "text/javascript", src = "js/geolocate.js")
+    //
+      always put all the non-global scripts below the include scripts.jade
+      otherwise no jquery support
     include ./templates/scripts.jade
+    script(type = "text/javascript", src = "js/geolocate.js")
     include ./templates/playerNav.jade
     div.container
       div.row
@@ -16,14 +19,12 @@ html(lang = 'en')
             label(for = "deceasedid" class = "active") Deceased ID
           div(class = "input-field col s12")
             p Location
-            input(class = "white-text" type = "text" name = "location" id = "coords" value="hi")
+            input(class = "white-text" type = "text" name = "location" id = "coords" disabled)
             //label(for = "location" class = "active white-text") Location
-          div(class = "col s12 m2")
-            a(onclick = "logPosition()" class = "btn") test
-          div(class = "col s12 m2")
-            a(onclick = "clear()" class = "btn") clear
-          div(class = "col s12 m2")
-            button(type = "submit" name = "action" class = "btn waves-effect waves-light blue-grey center") Log
+          div(class = "col s12 m3 l2")
+            a(onclick = "logPosition()" class = "card btn") test
+          div(class = "col s12 m3 l2")
+            button(type = "submit" name = "action" class = "card btn waves-effect waves-light blue-grey center") Log
 
 
 //p.center Click the button to record your coordinates.
