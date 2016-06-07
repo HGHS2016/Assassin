@@ -2,6 +2,7 @@ module.exports.loaddata = reinitdata
 module.exports.computeteams = computeteams
 module.exports.computeplayers = computeplayers
 module.exports.computemytarget = computemytarget
+module.exports.unassignedplayers = unassignedplayers
 
 var csv = require('csv-array');
 var HashMap = require('hashmap');
@@ -43,6 +44,18 @@ function computemytarget(cloudant, user, response) {
     }); // get playerlist
 };
 
+function unassignedplayers(cloudant, response) {
+    local = cloudant;
+    computeplayersJSON( function(players) {
+	var unassigned = [];
+	players.forEach(function(player) {
+	    if(player.team == "" && player.role != "god") unassigned.push(player); 
+	});
+	response.send(JSON.stringify(unassigned));
+    });
+}
+			     
+	
 function computeplayers(cloudant, response) {
     local = cloudant;
     computeplayersJSON( function (players) {
