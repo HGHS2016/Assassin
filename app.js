@@ -340,7 +340,7 @@ app.get('/sendingkill', function(req, res) {
 });
 
 app.get('/confirmkill', function(req, res) {
-	assassin.view('kill', 'kill-index', {include_docs: true},  function(err, body) {
+	assassin.view('kill', 'kill-view', {include_docs: true},  function(err, body) {
 		if(!err) {
 			var kills = [];
 			var curkill = body.rows[0].key.kill;
@@ -365,7 +365,21 @@ app.get('/confirmkill', function(req, res) {
 			kills.push(killrow);
 			res.send(JSON.stringify(kills));
 		}
+		else {
+			res.send("error");
+		}
 	});
+});
+
+app.get('confirmingkill', function(req, res) {
+	var killer = "jobass";
+	var killed = "bobass";
+	var confirmation = "true";
+	var notes = "Kill is ok";
+	if(notes.length == 0) {
+		notes = "none";
+	}
+
 });
 
 

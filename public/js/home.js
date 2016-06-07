@@ -8,7 +8,8 @@ function populateMyTarget() {
     var toggle = false;
     var req = "/mytarget?user=" + local_data.user;
 
-    $.get(req, function(data) {
+    //added res, not sure why this worked
+    $.get(req, res, function(data) {
 	var target = JSON.parse(data);
 	if (target != "") {
 	    var html = '';
@@ -22,6 +23,10 @@ function populateMyTarget() {
 		span.last().after(html);
 		console.log(html);
 	    }
+	}
+	else {
+		//doesn't redirect, but stops server from crashing...
+		res.redirect('/signup');
 	}
     });
 }
