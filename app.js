@@ -257,6 +257,30 @@ app.get('/kill', function(req, res){
 		}
 	});
 
+app.get('/resettargets', function(req, res){
+	assassin.view('team', 'teams', {include_docs: true}, function(err, body) {
+		var firstteam = body.rows[0];
+		var i = 0;
+		var last = body.rows.length-1;
+		var teams = [];
+		body.rows.forEach(function(team) {
+			if (i != last) {
+				team.doc.target = body.rows[i+1].doc.name;
+			}
+			else {
+				team.doc.target = firstteam.doc.name;
+			}
+			teams[i] = team.doc;
+			i++;
+		});
+		console.log(JSON.stringify(teams));
+		assassin.bulk({'docs': teams}, function(err, body){
+			if(!err){
+			res.send(JSON.stringify(body));
+			}
+		});
+	});
+});
 
 app.get('/sendingkill', function(req, res) {
 	var rawlatlong = req.param('location');
@@ -341,7 +365,7 @@ app.get('/sendingkill', function(req, res) {
 });
 
 app.get('/confirmkill', function(req, res) {
-	assassin.view('kill', 'kill-index', {include_docs: true},  function(err, body) {
+	assassin.view('kill', 'kill-view', {include_docs: true},  function(err, body) {
 		if(!err) {
 			var kills = [];
 			var curkill = body.rows[0].key.kill;
@@ -366,7 +390,21 @@ app.get('/confirmkill', function(req, res) {
 			kills.push(killrow);
 			res.send(JSON.stringify(kills));
 		}
+		else {
+			res.send("error");
+		}
 	});
+});
+
+app.get('confirmingkill', function(req, res) {
+	var killer = "jobass";
+	var killed = "bobass";
+	var confirmation = "true";
+	var notes = "Kill is ok";
+	if(notes.length == 0) {
+		notes = "none";
+	}
+
 });
 
 
