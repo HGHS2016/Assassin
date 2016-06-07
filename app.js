@@ -80,6 +80,7 @@ app.get('/home', function(req, res){
 				req.userSession.reset();
 				req.redirect('/login')
 			} else {
+				var user = res.userSession.user
 				// expose the user to the template
 				res.locals.user = user;
 				// render the player page
@@ -103,8 +104,8 @@ app.get('/login', function(req, res){
 });
 
 app.get('/loggingin', function(req, res) {
-    user = req.param('user');
-    pass = req.param('pass');
+    var user = req.param('user');
+    var pass = req.param('pass');
     assassin.get(req.param('user'), function(err, body) {
 	if(!err) {
 	    if(body.password == req.param('pass')) {
@@ -197,6 +198,7 @@ app.get('/god', function(req, res){
 					req.userSession.reset();
 					req.redirect('/login')
 				} else {
+					var user = req.userSession.user;
 					// expose the user to the template
 					res.locals.user = user;
 					// render the god page
@@ -406,6 +408,7 @@ app.get('/initdata', function(req,res) {
 });
 
 app.get('/logout', function(req,res){
+	delete req.session.lo
 	res.redirect('/');
 });
 
