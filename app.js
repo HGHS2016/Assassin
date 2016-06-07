@@ -230,6 +230,24 @@ app.get('/kill', function(req, res){
 
 
 app.get('/sendingkill', function(req, res) {
+	var rawlatlong = req.param('location');
+	var longlat;
+	var long;
+	var lat;
+	var count = 0;
+	console.log(rawlatlong);
+	while(rawlatlong.charAt(count) != ' ') {
+		count++;
+	}
+	lat = rawlatlong.substring(0, count);
+	count+=3;
+	count2 = count;
+	while(rawlatlong.charAt(count2) != ' ') {
+		count2++;
+	}
+	long = rawlatlong.substring(count2, count);
+	longlat = long + "+" + lat;
+	console.log("Final: nospace" + longlat + "nospace");
 	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
 		if(!err) {
 			//searches through all players to find entered in unique id
@@ -237,7 +255,7 @@ app.get('/sendingkill', function(req, res) {
 			var found = false;
 			body.rows.forEach(function(row) {
 				count++;
-				if(row.doc.uniqueid == req.param("DeceasedID")) {
+				if(row.doc.uniqueid == req.param('DeceasedID')) {
 					//gets the document for the found unique id
 					assassin.get(row.doc._id, function(err2, body2) {
 						if(!err2) {
@@ -246,7 +264,8 @@ app.get('/sendingkill', function(req, res) {
 							opts.db = "assassin";
 							opts.method = "get";
 							opts.content_type = "json";
-							opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-10+10)&include_docs=true";
+							//opts.path = "_design/location/_geo/newGeoIndex?g=POINT(-10+10)&include_docs=true";
+							opts.path = "_design/location/_geo/newGeoIndex?g=POINT(" + longlat + ")&include_docs=true";
 							cloudant.request(opts, function(err,body) {
 								if (err) {
 									console.log("[cloudant error" + JSON.stringify(err));
@@ -254,7 +273,7 @@ app.get('/sendingkill', function(req, res) {
 								}
 								//goes here if there are no safezone conflicts (i.e. array of safezone conflicts is 0)
 								if(body.rows.length == 0) {
-									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "confirmed":"true", "notes":"none"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
+									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "confirmed":"false", "notes":"needs approval"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body, header) {
 										if(!err3) {
 											res.send("Kill Submitted");
 										}
