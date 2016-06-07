@@ -29,10 +29,16 @@ function createPlayerTableRow(name, role, status, toggle) {
 }
 
 function createTeamTableRow(name, player1, player2, status, target, toggle) {
+  var state = '';
+  if(status == 'alive'){
+      state = '<i class="material-icons">check</i>';
+  } else {
+      state = '<i class="material-icons">close</i>';
+  }
     if(toggle){
-	return '<tr class= "amber darken-3"><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + status + '</td><td class = "center">' + target + '</td></tr>';
+	return '<tr class= "amber darken-3"><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + state + '</td><td class = "center">' + target + '</td></tr>';
     } else {
-	return '<tr><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + status + '</td><td class = "center">' + target + '</td></tr>';
+	return '<tr><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + state + '</td><td class = "center">' + target + '</td></tr>';
     }
 }
 
