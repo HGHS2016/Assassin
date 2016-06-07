@@ -229,7 +229,8 @@ app.get('/unassignedplayers', function(req, res) {
 
 app.get('/createTeam', function(req, res) {
     res.render('newteam.jade', {pageData: {
-	    title: "Create a Team"
+	    title: "Create a Team",
+			user: req.userSession.user,
     }});
 });
 
@@ -256,6 +257,30 @@ app.get('/kill', function(req, res){
 		}
 	});
 
+app.get('/resettargets', function(req, res){
+	assassin.view('team', 'teams', {include_docs: true}, function(err, body) {
+		var firstteam = body.rows[0];
+		var i = 0;
+		var last = body.rows.length-1;
+		var teams = [];
+		body.rows.forEach(function(team) {
+			if (i != last) {
+				team.doc.target = body.rows[i+1].doc.name;
+			}
+			else {
+				team.doc.target = firstteam.doc.name;
+			}
+			teams[i] = team.doc;
+			i++;
+		});
+		console.log(JSON.stringify(teams));
+		assassin.bulk({'docs': teams}, function(err, body){
+			if(!err){
+			res.send(JSON.stringify(body));
+			}
+		});
+	});
+});
 
 app.get('/sendingkill', function(req, res) {
 	var rawlatlong = req.param('location');
