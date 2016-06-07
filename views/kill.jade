@@ -1,31 +1,31 @@
 doctype html
-html(lang='en')
+html(lang = 'en')
   head
     include ./templates/header.jade
     include ./templates/globalVar.jade
-  body(class= bgColor)
-    script(type="text/javascript", src="js/geolocate.js")
+  body(class = bgColor)
+    script(type = "text/javascript", src = "js/geolocate.js")
     include ./templates/scripts.jade
     include ./templates/playerNav.jade
     div.container
       div.row
         h1.center Log A Kill
         form(action = "/sendingkill" method = "get")
-          div(class="input-field col s12 ")
-            input(type = "text" name = "DeceasedID" id="deceasedid")
-            label(for="deceasedid" class = "active") Deceased ID
-          div(class="input-field col s12 ")
+          div(class = "input-field col s12 ")
+            input(type = "text" name = "DeceasedID" id = "deceasedid")
+            label(for = "deceasedid" class = "active") Deceased ID
+          div(class = "input-field col s12")
             p Location
-            input(class="white-text" type = "text" name = "location" id = "location" deactivated)
-            //label(for="location" class="active white-text") Location
-          div(class="col s2")
-            a(onclick="logPosition()" class = "btn") test
-          div(class="col s2")
-            a(onclick="clear()" class = "btn") clear
-          div(class="col s2")
-            button(type = "submit" name = "action" class="btn waves-effect waves-light blue-grey center") Log
+            input(class = "white-text" type = "text" name = "location" id = "coords" value="hi")
+            //label(for = "location" class = "active white-text") Location
+          div(class = "col s12 m2")
+            a(onclick = "logPosition()" class = "btn") test
+          div(class = "col s12 m2")
+            a(onclick = "clear()" class = "btn") clear
+          div(class = "col s12 m2")
+            button(type = "submit" name = "action" class = "btn waves-effect waves-light blue-grey center") Log
 
 
 //p.center Click the button to record your coordinates.
-//button(onclick='getLocation(function(location))' class="blue-grey") Get My Location
+//button(onclick = 'getLocation(function(location))' class = "blue-grey") Get My Location
 //p.center#demo

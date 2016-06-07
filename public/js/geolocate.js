@@ -1,33 +1,38 @@
-var x = document.getElementById("demo");
-function getLocation(callback) {
+var x;
+function loader(){
+  var x = document.getElementById("coords");
+}
+function logPosition(callback) {
+    console.log(x);
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function showPosition(position) {
-    x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
-    callback(position);
-});
+          document.getElementById("coords").value = position.coords.latitude + " N " + position.coords.longitude + " S ";
+        });
     } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
+        document.getElementById("location").value = "Geolocation is not supported by this browser.";
     }
 }
 
 function showPosition(position) {
     x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
 }
-
-function logPosition(position) {
+/**
+function logPosition(callback) {
   if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function showPosition(position) {
-        document.getElementById("location").value = position.coords.latitude + " N " + position.coords.longitude + " S ";
+        document.getElementById("coords").value = position.coords.latitude + " N " + position.coords.longitude + " S ";
         callback(position);
 });
   } else {
-      document.getElementById("location").value = "Geolocation is not supported by this browser.";
+      document.getElementById("coords").value = "Geolocation is not supported by this browser.";
   }
 }
-
+*/
 function clear(){
   console.log('boop');
   var clear = "";
-  document.getElementById("location").value = "hi";
+  document.getElementById("coords").value = "hi";
   callback(clear);
 }
+
+$(loader);
