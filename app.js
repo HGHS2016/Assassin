@@ -229,7 +229,8 @@ app.get('/unassignedplayers', function(req, res) {
 
 app.get('/createTeam', function(req, res) {
     res.render('newteam.jade', {pageData: {
-	    title: "Create a Team"
+	    title: "Create a Team",
+			user: req.userSession.user,
     }});
 });
 
