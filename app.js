@@ -213,9 +213,7 @@ app.get('/god', function(req, res){
 });
 
 app.get('/createTeam', function(req, res){
-	//res.render('newteam.jade', {title: "Create a Team"});
-	console.log(res.locals.user);
-	datamodule.computeplayers(cloudant, res)
+	datamodule.unassignedplayers(cloudant, res)
 });
 
 app.get('/kill', function(req, res){
