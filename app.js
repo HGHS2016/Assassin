@@ -193,7 +193,7 @@ app.get('/god', function(req, res){
 		if (req.userSession && req.userSession.user) { //Check if session exists
 			// lookup the user in the DB by pulling their username from session
 			assassin.get(req.userSession.user, function(err, body){
-				if(err){
+				if(err || !req.userSession.user){
 					req.userSession.reset();
 					req.redirect('/login')
 				} else {
