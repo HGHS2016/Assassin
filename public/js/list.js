@@ -28,11 +28,31 @@ function createPlayerTableRow(name, role, status, toggle) {
     }
 }
 
-function createTeamTableRow(name, player1, player2, target, toggle) {
+function createTeamTableRow(name, player1, player2, status, target, toggle) {
+  var state = '';
+  if(status == 'alive'){
+      state = '<i class="material-icons">check</i>';
+  } else {
+      state = '<i class="material-icons">close</i>';
+  }
+  var player1name = '';
+  if(player1.status == 'alive'){
+    player1name = player1.name;
+  }
+  else {
+    player1name = '<s>' + player1.name + '</s>';
+  }
+  var player2name = '';
+  if(player2.status == 'alive'){
+    player2name = player2.name;
+  }
+  else {
+    player2name = '<s>' + player2.name + '</s>';
+  }
     if(toggle){
-	return '<tr class= "amber darken-3"><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + target + '</td></tr>';
+	return '<tr class= "amber darken-3"><td>' + name + '</td><td class = "center">' + player1name + '</td><td class = "center">' + player2name + '</td><td class = "center">' + state + '</td><td class = "center">' + target + '</td></tr>';
     } else {
-	return '<tr><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + target + '</td></tr>';
+	return '<tr><td>' + name + '</td><td class = "center">' + player1name + '</td><td class = "center">' + player2name + '</td><td class = "center">' + state + '</td><td class = "center">' + target + '</td></tr>';
     }
 }
 
@@ -71,7 +91,7 @@ function populateTeamTable() {
 	var html = '';
 	teams.forEach(function(team) {
 	    toggle = !toggle;
-	    html = html.concat(createTeamTableRow(team.name, team.player1.name, team.player2.name, team.target.original, toggle));
+	    html = html.concat(createTeamTableRow(team.name, team.player1, team.player2, team.status, team.target.original, toggle));
 	});
 	table.last().after(html);
     });
