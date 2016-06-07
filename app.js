@@ -414,7 +414,7 @@ app.get('/initdata', function(req,res) {
 });
 
 app.get('/logout', function(req,res){
-	delete req.session.lo
+	delete req.userSession
 	res.redirect('/');
 });
 
