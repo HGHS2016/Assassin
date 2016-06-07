@@ -193,18 +193,22 @@ app.get('/god', function(req, res){
 		if (req.userSession && req.userSession.user) { //Check if session exists
 			// lookup the user in the DB by pulling their username from session
 			assassin.get(req.userSession.user, function(err, body){
-				if(err || !req.userSession.user){
+				if(err){
 					req.userSession.reset();
 					req.redirect('/login')
 				} else {
-					var user = req.userSession.user;
-					// expose the user to the template
-					res.locals.user = user;
-					// render the god page
-					res.render('god.jade', {pageData: {
-						"title": "gods view!",
-						"user" : user,
-					}});
+					if(body.role == "assassin") {
+						req.redirect('/home');
+					} else {
+						var user = req.userSession.user;
+						// expose the user to the template
+						res.locals.user = user;
+						// render the god page
+						res.render('god.jade', {pageData: {
+							"title": "gods view!",
+							"user" : user,
+						}});
+					}
 				}
 			});
 		} else {
@@ -212,21 +216,45 @@ app.get('/god', function(req, res){
 		}
 });
 
+app.get('/test', function(req, res){
+	res.render('test.jade', {pageData: {
+		"title" : "test",
+		"user"  : "non-existant",
+	}})
+});
+
 app.get('/unassignedplayers', function(req, res) {
     datamodule.unassignedplayers(cloudant, res);
 });
-	
+
 app.get('/createTeam', function(req, res) {
     res.render('newteam.jade', {pageData: {
 	    title: "Create a Team"
-    }}); 
+    }});
 });
 
 app.get('/kill', function(req, res){
-	res.render('kill.jade', {pageData: {
-		title: "LET'S KILL"
-	}});
-});
+	if(req.userSession && req.userSession.user) { //Check if session exists
+		// lookup the user in the DB by pulling their username from session
+		assassin.get(req.userSession.user, function(err, body){
+			if(err){
+				req.userSession.reset();
+				req.redirect('/login')
+			} else {
+					if(body.role == "god"){
+						req.redirect
+					}
+					var user = req.userSession.user;
+					// expose the user to the template
+					res.locals.user = user;
+					// render the kill page
+					res.render('kill.jade', {pageData: {
+						title: "LET'S KILL"
+					}});
+				}
+			});
+		}
+	});
 
 
 app.get('/sendingkill', function(req, res) {
