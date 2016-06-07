@@ -29,7 +29,7 @@ function computemytarget(cloudant, user, response) {
 
 	    // find the player's team
 	    while (team.name != player.team && j < teams.length-1) { j = j+1; team = teams[j]; console.log(team);}; 
-	    if (j == teams.length-1) {console.log("no team found for player" + JSONstringify(player));
+	    if (j == teams.length-1) {console.log("no team found for player" + JSON.stringify(player));
 				     response.send("");}
 	    // find the team's target information
 	    j=0;
