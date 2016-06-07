@@ -28,11 +28,11 @@ function createPlayerTableRow(name, role, status, toggle) {
     }
 }
 
-function createTeamTableRow(name, player1, player2, target, toggle) {
+function createTeamTableRow(name, player1, player2, status, target, toggle) {
     if(toggle){
-	return '<tr class= "amber darken-3"><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + target + '</td></tr>';
+	return '<tr class= "amber darken-3"><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + status + '</td><td class = "center">' + target + '</td></tr>';
     } else {
-	return '<tr><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + target + '</td></tr>';
+	return '<tr><td>' + name + '</td><td class = "center">' + player1 + '</td><td class = "center">' + player2 + '</td><td class = "center">' + status + '</td><td class = "center">' + target + '</td></tr>';
     }
 }
 
@@ -71,7 +71,7 @@ function populateTeamTable() {
 	var html = '';
 	teams.forEach(function(team) {
 	    toggle = !toggle;
-	    html = html.concat(createTeamTableRow(team.name, team.player1.name, team.player2.name, team.target.original, toggle));
+	    html = html.concat(createTeamTableRow(team.name, team.player1.name, team.player2.name, team.status, team.target.original, toggle));
 	});
 	table.last().after(html);
     });
