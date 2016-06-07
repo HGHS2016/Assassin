@@ -28,7 +28,7 @@ function createPlayerTableRow(name, role, status, toggle) {
     }
 }
 
-function createTeamTableRow(name, player1, player2, status, target, toggle) {
+function createTeamTableRow(name, player1, player2, status, target, currenttarget, toggle) {
   var state = '';
   if(status == 'alive'){
       state = '<i class="material-icons">check</i>';
@@ -49,10 +49,14 @@ function createTeamTableRow(name, player1, player2, status, target, toggle) {
   else {
     player2name = '<s>' + player2.name + '</s>';
   }
+  var newtarget = '<i class="material-icons">remove</i>';
+  if(status == 'alive'){
+    newtarget = currenttarget;
+  }
     if(toggle){
-	return '<tr class= "amber darken-3"><td>' + name + '</td><td class = "center">' + player1name + '</td><td class = "center">' + player2name + '</td><td class = "center">' + state + '</td><td class = "center">' + target + '</td></tr>';
+	return '<tr class= "amber darken-3"><td>' + name + '</td><td class = "center">' + player1name + '</td><td class = "center">' + player2name + '</td><td class = "center">' + state + '</td><td class = "center">' + target + '</td><td class = "center">' + newtarget + '</td></tr>';
     } else {
-	return '<tr><td>' + name + '</td><td class = "center">' + player1name + '</td><td class = "center">' + player2name + '</td><td class = "center">' + state + '</td><td class = "center">' + target + '</td></tr>';
+	return '<tr><td>' + name + '</td><td class = "center">' + player1name + '</td><td class = "center">' + player2name + '</td><td class = "center">' + state + '</td><td class = "center">' + target + '</td><td class = "center">' + newtarget + '</td></tr>';
     }
 }
 
@@ -91,7 +95,7 @@ function populateTeamTable() {
 	var html = '';
 	teams.forEach(function(team) {
 	    toggle = !toggle;
-	    html = html.concat(createTeamTableRow(team.name, team.player1, team.player2, team.status, team.target.original, toggle));
+	    html = html.concat(createTeamTableRow(team.name, team.player1, team.player2, team.status, team.target.original, team.target.current, toggle));
 	});
 	table.last().after(html);
     });
@@ -120,4 +124,3 @@ function populateTargetTable() {
 
 $(populatePlayerTable);
 $(populateTeamTable);
-$(populateTargetTable);
