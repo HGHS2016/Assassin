@@ -312,6 +312,36 @@ app.get('/sendingkill', function(req, res) {
 	});
 });
 
+app.get('/confirmkill', function(req, res) {
+	assassin.view('kill', 'kill-index', {include_docs: true},  function(err, body) {
+		if(!err) {
+			var kills = [];
+			var curkill = body.rows[0].key.kill;
+			var killrow = {};
+			killrow._id = curkill;
+			body.rows.forEach(function(row) {
+				if (curkill != row.key.kill) {
+					kills.push(killrow);
+					curkill = row.key.kill;
+					killrow = {};
+					killrow.name = curkill;
+				}
+				if (row.key.field == 'killer')
+					killrow.killer = row.doc.first.concat(' ').concat(row.doc.last);
+				if (row.key.field == 'killed')
+					killrow.killed = row.doc.first.concat(' ').concat(row.doc.last);
+				if (row.key.field == 'about') {
+					killrow.confirmed = row.doc.properties.confirmed;
+					killrow.notes = row.doc.properties.notes;
+				}
+			});
+			kills.push(killrow);
+			res.send(JSON.stringify(kills));
+		}
+	});
+});
+
+
 app.get('/playerlist', function(req, res) {
 	datamodule.computeplayers(cloudant, res)
 });
