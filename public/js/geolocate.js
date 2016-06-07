@@ -16,7 +16,7 @@ function showPosition(position) {
 
 function logPosition(position) {
   if (navigator.geolocation) {
-      navigator.geolocation.getCurrentesttPosition(function showPosition(position) {
+      navigator.geolocation.getCurrentPosition(function showPosition(position) {
         document.getElementById("location").value = position.coords.latitude + " N " + position.coords.longitude + " S ";
         callback(position);
 });
