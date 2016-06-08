@@ -4,16 +4,17 @@
 // node.js starter application for Bluemix
 //------------------------------------------------------------------------------
 
+//hi!!
 var express = require('express');
 var app = express();
 var session = require('client-sessions');
 var pass = "";
 
 function requireHTTPS(req, res, next) {
-    if (req.headers && req.headers.$wssp === "80") {
+		if (req.headers && req.headers.$wssp === "80") {
 	return res.redirect('https://' + req.get('host') + req.url);
-    }
-    next();
+		}
+		next();
 }
 
 app.use(requireHTTPS);
@@ -82,26 +83,29 @@ app.get('/', function(req, res){
 
 app.get('/home', function(req, res){
 	if (req.userSession && req.userSession.user) { //Check if session exists
-		// lookup the user in the DB by pulling their username from session
-		assassin.get(req.userSession.user, function(err, body){
-			if(err){
-				req.userSession.reset();
-				req.redirect('/login')
-			} else {
-				var user = req.userSession.user
-				// expose the user to the template
-				res.locals.user = user;
-				// render the player page
-
-    		res.render('home.jade', {pageData: {
+			// lookup the user in the DB by pulling their username from session
+			assassin.get(req.userSession.user, function(err, body){
+				if(err){
+					req.userSession.reset();
+					req.redirect('/login')
+				} else {
+					if(body.role == "god") {
+						res.redirect('/god');
+					} else {
+						var user = req.userSession.user;
+						// expose the user to the template
+						res.locals.user = user;
+						// render the home page
+						res.render('home.jade', {pageData: {
 					title : "HOME",
 					"user" : user,
-				}});
+						}});
+					}
 				}
-		});
-	} else {
-		res.redirect('/login');
-	}
+			});
+		} else {
+			res.redirect('/login');
+		}
 });
 
 app.get('/login', function(req, res){
@@ -112,38 +116,38 @@ app.get('/login', function(req, res){
 });
 
 app.get('/loggingin', function(req, res) {
-    var user = req.query['user'];
-    var pass = req.query['pass'];
-    assassin.get(req.query['user'], function(err, body) {
+		var user = req.query['user'];
+		var pass = req.query['pass'];
+		assassin.get(req.query['user'], function(err, body) {
 	if(!err) {
-	    if(body.password == req.query['pass']) {
+			if(body.password == req.query['pass']) {
 				// sets a cookie with the user's info
 				req.userSession.user = user;
 				req.userSession.role = body.role;
 		if(body.role == "god") {
-		    res.redirect("/god");
+				res.redirect("/god");
 		}
 		else if(body.role == "assassin") {
-		    res.redirect("/home");
+				res.redirect("/home");
 		}
-	    }
-	    else {
+			}
+			else {
 				console.log("failed");
 				res.render('login.jade', {pageData: {
 					title: "LET'S TRY TO LOGIN AGAIN",
 					error: 'Invalid username or password.'
 				}});
-	    }
+			}
 	}
 	else {
-	    console.log("failed");
-	    res.render('login.jade', {pageData: {
+			console.log("failed");
+			res.render('login.jade', {pageData: {
 				title: "LET'S TRY TO LOGIN AGAIN",
 				error: 'Invalid username or password.'
 			}});
 	}
-    });
-    //res.send("Hi");
+		});
+		//res.send("Hi");
 });
 
 //login should use post, but this is not working
@@ -194,7 +198,7 @@ app.get('/signupfailed', function(req, res){
 
 //17,576,000 uniqueid possibilites meaning there is a chance that 2 people get the same one
 app.get('/signingup', function(req, res) {
-    if(req.query['pass'] != req.query['pass2']) {
+		if(req.query['pass'] != req.query['pass2']) {
 		res.redirect("/signupfailed");
 	}
 	else {
@@ -259,14 +263,34 @@ app.get('/test', function(req, res){
 });
 
 app.get('/unassignedplayers', function(req, res) {
-    datamodule.unassignedplayers(cloudant, res);
+		datamodule.unassignedplayers(cloudant, res);
 });
 
 app.get('/createTeam', function(req, res) {
-    res.render('newteam.jade', {pageData: {
-	title: "Create a Team",
- 	user: req.userSession.user,
-    }});
+		if (req.userSession && req.userSession.user) { //Check if session exists
+			// lookup the user in the DB by pulling their username from session
+			assassin.get(req.userSession.user, function(err, body){
+				if(err){
+					req.userSession.reset();
+					req.redirect('/login')
+				} else {
+					if(body.role == "assassin") {
+						res.redirect('/home');
+					} else {
+						var user = req.userSession.user;
+						// expose the user to the template
+						res.locals.user = user;
+						// render the new team page
+						res.render('newteam.jade', {pageData: {
+						title: "Create a Team",
+						user: req.userSession.user,
+							}});
+					}
+				}
+			});
+		} else {
+			res.redirect('/login');
+		}
 });
 
 app.get('/creatingTeam', function(req, res) {
@@ -276,30 +300,39 @@ app.get('/creatingTeam', function(req, res) {
 		body.rows.forEach(function(team) {
 			if (team.doc.name == req.query['teamname']) {
 				console.log("idiot");
-				res.redirect('/createTeam');
+				res.render('newteam.jade', {pageData: {
+					title: "LET'S TRY AGAIN",
+					error: 'Team name taken'
+				}});
 			}
 			i++
+			if(i == last){
+				if(req.query['p1'] == req.query['p2']){
+					console.log("moron");
+					res.render('newteam.jade', {pageData: {
+						title: "LET'S TRY AGAIN",
+						error: 'p1 and p2 are the same'
+					}});
+				}
+				else {
+					var id = req.query['teamname'];
+					var p1 = req.query['p1'];
+					var p2 = req.query['p2'];
+					var teamname = req.query['teamname'];
+					assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
+						if(!err){
+							res.redirect('/resettargets');
+						}
+						if(err){
+							res.render('newteam.jade', {pageData: {
+								title: "LET'S TRY AGAIN",
+								error: 'unknown error'
+							}});
+						}
+					});
+				}
+			}
 		});
-		if(i == last){
-			if(req.query['p1'] == req.query['p2']){
-				console.log("moron");
-				res.redirect('/createTeam');
-			}
-			else {
-				var id = req.query['teamname'];
-				var p1 = req.query['p1'];
-				var p2 = req.query['p2'];
-				var teamname = req.query['teamname'];
-				assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
-					if(!err){
-						res.redirect('/resettargets');
-					}
-					if(err){
-						res.redirect('/resettargets');
-					}
-				});
-			}
-		}
 	});
 });
 
@@ -355,19 +388,22 @@ app.get('/sendingkill', function(req, res) {
 	var long;
 	var lat;
 	var count = 0;
-	console.log(rawlatlong);
-	while(rawlatlong.charAt(count) != ' ') {
-		count++;
+	if(rawlatlong == "") {
+		longlat = "";
 	}
-	lat = rawlatlong.substring(0, count);
-	count+=3;
-	count2 = count;
-	while(rawlatlong.charAt(count2) != ' ') {
-		count2++;
+	else {
+		while(rawlatlong.charAt(count) != ' ') {
+			count++;
+		}
+		lat = rawlatlong.substring(0, count);
+		count+=3;
+		count2 = count;
+		while(rawlatlong.charAt(count2) != ' ') {
+			count2++;
+		}
+		long = rawlatlong.substring(count2, count);
+		longlat = long + "+" + lat;
 	}
-	long = rawlatlong.substring(count2, count);
-	longlat = long + "+" + lat;
-	console.log("Final: nospace" + longlat + "nospace");
 	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
 		if(!err) {
 			//searches through all players to find entered in unique id
@@ -380,39 +416,52 @@ app.get('/sendingkill', function(req, res) {
 					assassin.get(row.doc._id, function(err2, body2) {
 						if(!err2) {
 							//finds path for geo view to check to see if the point is in any safezones
-							var opts = {};
-							opts.db = "assassin";
-							opts.method = "get";
-							opts.content_type = "json";
-							opts.path = "_design/location/_geo/newGeoIndex?g=POINT(" + longlat + ")&include_docs=true";
-							cloudant.request(opts, function(err,body) {
-								if (err) {
-									console.log("[cloudant error" + JSON.stringify(err));
-									return;
-								}
-								//goes here if there are no safezone conflicts (i.e. array of safezone conflicts is 0)
-								if(body.rows.length == 0) {
-									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"needs approval"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body, header) {
-										if(!err3) {
-											res.redirect('/home');
-										}
-										else {
-											res.send("err3");
-										}
-									});
-								}
-								//goes here if there is/are safezone conflicts
-								else {
-									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
-										if(!err3) {
-											res.redirect('/home');
-										}
-										else {
-											res.send("err3");
-										}
-									});
-								}
-							});
+							if(longlat.length != 0) {
+								var opts = {};
+								opts.db = "assassin";
+								opts.method = "get";
+								opts.content_type = "json";
+								opts.path = "_design/location/_geo/safezoneindex?g=POINT(" + longlat + ")&include_docs=true";
+								cloudant.request(opts, function(err,body3) {
+									if (err) {
+										console.log("[cloudant error" + JSON.stringify(err));
+										return;
+									}
+									//goes here if there are no safezone conflicts (i.e. array of safezone conflicts is 0)
+									if(body3.rows.length == 0) {
+										assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"needs approval"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body4, header) {
+											if(!err3) {
+												res.redirect('/home');
+											}
+											else {
+												res.send("err3");
+											}
+										});
+									}
+									//goes here if there is/are safezone conflicts
+									else {
+										assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body4, header) {
+											if(!err3) {
+												res.redirect('/home');
+											}
+											else {
+												res.send("err3");
+											}
+										});
+									}
+								});
+							}
+							else {
+								//goes here if location was not recorded
+								assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"location not recorded"}, "geometry":{"type":"Point", "coordinates":[]}}, function(err3, body4, header) {
+									if(!err3) {
+										res.redirect('/home');
+									}
+									else {
+										res.send("err3");
+									}
+								});
+							}
 						}
 						else {
 							res.send("err2");//error if no docs found under row.doc._id (shouldn't ever hit this error)
@@ -435,27 +484,32 @@ app.get('/confirmkill', function(req, res) {
 	assassin.view('kill', 'unseenkill-view', {include_docs: true},  function(err, body) {
 		if(!err) {
 			var kills = [];
-			var curkill = body.rows[0].key.kill;
-			var killrow = {};
-			killrow._id = curkill;
-			body.rows.forEach(function(row) {
-				if (curkill != row.key.kill) {
-					kills.push(killrow);
-					curkill = row.key.kill;
-					killrow = {};
-					killrow.name = curkill;
-				}
-				if (row.key.field == 'killer')
-					killrow.killer = row.doc.first.concat(' ').concat(row.doc.last);
-				if (row.key.field == 'killed')
-					killrow.killed = row.doc.first.concat(' ').concat(row.doc.last);
-				if (row.key.field == 'about') {
-					killrow.confirmed = row.doc.properties.confirmed;
-					killrow.notes = row.doc.properties.notes;
-				}
-			});
-			kills.push(killrow);
-			res.send(JSON.stringify(kills));
+			if(body.rows.length != 0) {
+				var curkill = body.rows[0].key.kill;
+				var killrow = {};
+				killrow._id = curkill;
+				body.rows.forEach(function(row) {
+					if (curkill != row.key.kill) {
+						kills.push(killrow);
+						curkill = row.key.kill;
+						killrow = {};
+						killrow.name = curkill;
+					}
+					if (row.key.field == 'killer')
+						killrow.killer = row.doc.first.concat(' ').concat(row.doc.last);
+					if (row.key.field == 'killed')
+						killrow.killed = row.doc.first.concat(' ').concat(row.doc.last);
+					if (row.key.field == 'about') {
+						killrow.confirmed = row.doc.properties.confirmed;
+						killrow.notes = row.doc.properties.notes;
+					}
+				});
+				kills.push(killrow);
+				res.send(JSON.stringify(kills));
+			}
+			else {
+				res.send(JSON.stringify(kills));
+			}
 		}
 		else {
 			res.send("error");
@@ -464,12 +518,12 @@ app.get('/confirmkill', function(req, res) {
 });
 
 app.get('/confirmingkill', function(req, res) {
-	var id = "f6914a66cb29f592f1b726ad73b568f3";//to be coded later
+	var id = "e8fcac94548af4a12aae93b6c15c67e5";//to be coded later
 	assassin.get(id, function(err, body) {
 		if(!err) {
 			var geometry = body.geometry;
-			var confirmation = "true";//to be coded later
-			var notes = "Kill is ok";//to be coded later
+			var confirmation = "false";//to be coded later
+			var notes = "How was he not killed!?";//to be coded later
 			if(notes.length == 0) {
 				notes = "none";
 			}
@@ -551,7 +605,7 @@ app.get('/goodkill', function(req, res) {
 
 // New version of teamlist
 app.get('/teamlist', function(req, res) {
-    datamodule.computeteams(cloudant, res)
+		datamodule.computeteams(cloudant, res)
 });
 
 /* Old version of teamlist
@@ -584,12 +638,12 @@ app.get('/teamlist', function(req, res) {
 */
 
 app.get('/targetlist', function(req, res) {
-    datamodule.computeteams(cloudant, res)
+		datamodule.computeteams(cloudant, res)
 });
 
 app.get('/mytarget', function(req, res) {
-    user = req.query['user'];
-    datamodule.computemytarget(cloudant, user, res)
+		user = req.query['user'];
+		datamodule.computemytarget(cloudant, user, res)
 });
 
 //    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
