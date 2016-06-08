@@ -4,7 +4,7 @@ function createPlayerOption(id, name){
 }
 
 function populateplayers() {
-	var dropDown = $("#p1 option");
+	var dropDown = $("p1 option");
 	//console.log(req);
 	$.get("/unassignedPlayers", function(data){
 		var html = '';
@@ -15,7 +15,7 @@ function populateplayers() {
 			console.log(player.id + ", " + player.name);
 		});
 		dropDown.last().after(html)
-		$('select').material_select();
+Materialize.updateTextFields();
 	});
 }
 
