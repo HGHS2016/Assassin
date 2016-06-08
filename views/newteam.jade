@@ -8,14 +8,14 @@ html(lang="en")
     include ./templates/godNav.jade
 
     div.row
-      form(class="col s12")
-        div(class="input-field col s12 m6" id="player1")
-          select(id = "p1" onchange="")
-            option(value="" disabled selected)
-          input(type="text" id="teamname" placeholder="Team Name" autocomplete="off")
+      form(class="col s12", action = '/creatingTeam')
         div(class="input-field col s12 m6")
-          select(id="p2")
+          select(name = "p1" id = "p1" onchange="console.log(JSON.stringify(document.getElementById('p1').option));")
             option(value="" disabled selected)
-          button(type="submit" class="btn waves-effect waves-light blue-grey white-text") Submit Team
+          input(name = "teamname" type="text" id="teamname" placeholder="Team Name" autocomplete="off")
+        div(class="input-field col s12 m6")
+          select(name = "p2" id="p2")
+            option(value="" disabled selected)
+          button(type="submit" name="action" class="btn waves-effect waves-light blue-grey white-text") Submit Team
 
   script(type="text/javascript" src="js/newteam.js")
