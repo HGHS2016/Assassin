@@ -18,6 +18,7 @@ function populateplayers2(list) {
     list.forEach(function(player) {
 	html = html.concat(createPlayerOption(player.id, player.name));
 	console.log("HTML " + html);
+		dropDown.last().after(html)
     });
     dropDown.last().after(html);
 }
@@ -28,6 +29,7 @@ function populateplayers() {
 	populateplayers1(list);
 	populateplayers2(list);
 	$('select').material_select();
+//	Materialize.updateTextFields();
     });
 }
 
