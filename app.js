@@ -396,6 +396,13 @@ app.get('/confirmkill', function(req, res) {
 	});
 });
 
+app.get('/pendingKill', function(req, res){
+	res.render('pendingKill.jade', {pageData: {
+		title : "DEATH TO ALL!",
+		user : "",
+	}});
+});
+
 app.get('confirmingkill', function(req, res) {
 	var killer = "jobass";
 	var killed = "bobass";
