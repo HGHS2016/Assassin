@@ -388,13 +388,10 @@ app.get('/sendingkill', function(req, res) {
 	var long;
 	var lat;
 	var count = 0;
-	console.log(rawlatlong);
 	if(rawlatlong == "") {
-		console.log("ENTERED IF");
 		longlat = "";
 	}
 	else {
-		console.log("ENTERED ELSE");
 		while(rawlatlong.charAt(count) != ' ') {
 			count++;
 		}
@@ -406,7 +403,6 @@ app.get('/sendingkill', function(req, res) {
 		}
 		long = rawlatlong.substring(count2, count);
 		longlat = long + "+" + lat;
-		console.log("Final: nospace" + longlat + "nospace");
 	}
 	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
 		if(!err) {
@@ -432,9 +428,7 @@ app.get('/sendingkill', function(req, res) {
 										return;
 									}
 									//goes here if there are no safezone conflicts (i.e. array of safezone conflicts is 0)
-									console.log("THIS IS THE LENGTH OF BODY AND ROWS: " + body3.rows.length);
 									if(body3.rows.length == 0) {
-										console.log("FIRST OPTION");
 										assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"needs approval"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body4, header) {
 											if(!err3) {
 												res.redirect('/home');
@@ -446,7 +440,6 @@ app.get('/sendingkill', function(req, res) {
 									}
 									//goes here if there is/are safezone conflicts
 									else {
-										console.log("SECOND OPTION");
 										assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body4, header) {
 											if(!err3) {
 												res.redirect('/home');
@@ -459,7 +452,6 @@ app.get('/sendingkill', function(req, res) {
 								});
 							}
 							else {
-								console.log("THIRD OPTION");
 								//goes here if location was not recorded
 								assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"location not recorded"}, "geometry":{"type":"Point", "coordinates":[]}}, function(err3, body4, header) {
 									if(!err3) {
@@ -492,27 +484,32 @@ app.get('/confirmkill', function(req, res) {
 	assassin.view('kill', 'unseenkill-view', {include_docs: true},  function(err, body) {
 		if(!err) {
 			var kills = [];
-			var curkill = body.rows[0].key.kill;
-			var killrow = {};
-			killrow._id = curkill;
-			body.rows.forEach(function(row) {
-				if (curkill != row.key.kill) {
-					kills.push(killrow);
-					curkill = row.key.kill;
-					killrow = {};
-					killrow.name = curkill;
-				}
-				if (row.key.field == 'killer')
-					killrow.killer = row.doc.first.concat(' ').concat(row.doc.last);
-				if (row.key.field == 'killed')
-					killrow.killed = row.doc.first.concat(' ').concat(row.doc.last);
-				if (row.key.field == 'about') {
-					killrow.confirmed = row.doc.properties.confirmed;
-					killrow.notes = row.doc.properties.notes;
-				}
-			});
-			kills.push(killrow);
-			res.send(JSON.stringify(kills));
+			if(body.rows.length != 0) {
+				var curkill = body.rows[0].key.kill;
+				var killrow = {};
+				killrow._id = curkill;
+				body.rows.forEach(function(row) {
+					if (curkill != row.key.kill) {
+						kills.push(killrow);
+						curkill = row.key.kill;
+						killrow = {};
+						killrow.name = curkill;
+					}
+					if (row.key.field == 'killer')
+						killrow.killer = row.doc.first.concat(' ').concat(row.doc.last);
+					if (row.key.field == 'killed')
+						killrow.killed = row.doc.first.concat(' ').concat(row.doc.last);
+					if (row.key.field == 'about') {
+						killrow.confirmed = row.doc.properties.confirmed;
+						killrow.notes = row.doc.properties.notes;
+					}
+				});
+				kills.push(killrow);
+				res.send(JSON.stringify(kills));
+			}
+			else {
+				res.send(JSON.stringify(kills));
+			}
 		}
 		else {
 			res.send("error");
