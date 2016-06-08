@@ -1,0 +1,18 @@
+{
+  "_id": "b7678e8443616be19c1306d00108c420",
+  "_rev": "1-81bd5a48dd4426630ad1b8e92a5962fb",
+  "properties": {
+    "type": "kill",
+    "killer": "jeliu",
+    "killed": "dosilverman",
+    "confirmed": "false",
+    "notes": "needs approval"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -73.79656349999999,
+      41.207235399999995
+    ]
+  }
+}
