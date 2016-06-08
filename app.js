@@ -262,31 +262,36 @@ app.get('/createTeam', function(req, res) {
 
 app.get('/creatingTeam', function(req, res) {
 	assassin.view('team', 'teams', {include_docs: true}, function(err, body) {
+		var i = 0;
+		var last = body.rows.length-1;
 		body.rows.forEach(function(team) {
 			if (team.doc.name == req.query['teamname']) {
 				console.log("idiot");
-				res.redirect('/createteam');
-			}
-		});
-	});
-	if(req.query['p1'] == req.query['p2']){
-		console.log("moron");
-		res.redirect('/createTeam')
-	}
-	else {
-		var id = req.query['teamname'];
-		var p1 = req.query['p1'];
-		var p2 = req.query['p2'];
-		var teamname = req.query['teamname'];
-		assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
-			if(!err){
-				res.redirect('/resettargets');
-			}
-			else {
 				res.redirect('/createTeam');
 			}
+			i++
 		});
-	}
+		if(i == last){
+			if(req.query['p1'] == req.query['p2']){
+				console.log("moron");
+				res.redirect('/createTeam');
+			}
+			else {
+				var id = req.query['teamname'];
+				var p1 = req.query['p1'];
+				var p2 = req.query['p2'];
+				var teamname = req.query['teamname'];
+				assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
+					if(!err){
+						res.redirect('/resettargets');
+					}
+					if(err){
+						res.redirect('/resettargets');
+					}
+				});
+			}
+		}
+	});
 });
 
 app.get('/kill', function(req, res){
