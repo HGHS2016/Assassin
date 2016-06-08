@@ -8,6 +8,12 @@ html(lang="en")
     include ./templates/godNav.jade
 
     div.row
+      - if(pageData.error == 'Team name taken')
+        p.center (That team name is taken, please choose another)
+      - if(pageData.error == 'p1 and p2 are the same')
+        p.center (Both assassins are the same person, please make them different)
+      - if(pageData.error == 'unknown error')
+        p.center (Error saving data, please try again)
       form(class="col s12", action = '/creatingTeam')
         div(class="input-field col s12 m6")
           select(name = "p1" id = "p1" onchange="console.log(JSON.stringify(document.getElementById('p1').option));")

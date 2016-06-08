@@ -267,30 +267,39 @@ app.get('/creatingTeam', function(req, res) {
 		body.rows.forEach(function(team) {
 			if (team.doc.name == req.query['teamname']) {
 				console.log("idiot");
-				res.redirect('/createTeam');
+				res.render('newteam.jade', {pageData: {
+					title: "LET'S TRY AGAIN",
+					error: 'Team name taken'
+				}});
 			}
 			i++
+			if(i == last){
+				if(req.query['p1'] == req.query['p2']){
+					console.log("moron");
+					res.render('newteam.jade', {pageData: {
+						title: "LET'S TRY AGAIN",
+						error: 'p1 and p2 are the same'
+					}});
+				}
+				else {
+					var id = req.query['teamname'];
+					var p1 = req.query['p1'];
+					var p2 = req.query['p2'];
+					var teamname = req.query['teamname'];
+					assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
+						if(!err){
+							res.redirect('/resettargets');
+						}
+						if(err){
+							res.render('newteam.jade', {pageData: {
+								title: "LET'S TRY AGAIN",
+								error: 'unknown error'
+							}});
+						}
+					});
+				}
+			}
 		});
-		if(i == last){
-			if(req.query['p1'] == req.query['p2']){
-				console.log("moron");
-				res.redirect('/createTeam');
-			}
-			else {
-				var id = req.query['teamname'];
-				var p1 = req.query['p1'];
-				var p2 = req.query['p2'];
-				var teamname = req.query['teamname'];
-				assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
-					if(!err){
-						res.redirect('/resettargets');
-					}
-					if(err){
-						res.redirect('/resettargets');
-					}
-				});
-			}
-		}
 	});
 });
 
