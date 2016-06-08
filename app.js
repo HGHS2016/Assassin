@@ -183,6 +183,32 @@ app.get('/signupfailed', function(req, res){
 	}});
 });
 
+//17,576,000 uniqueid possibilites meaning there is a chance that 2 people get the same one
+app.get('/signingup', function(req, res) {
+    if(req.query['pass'] != req.query['pass2']) {
+		res.redirect("/signupfailed");
+	}
+	else {
+		var id = req.query['user'];
+		var d1 = Math.floor(Math.random() * 10).toString();
+		var d2 = Math.floor(Math.random() * 10).toString();
+		var d3 = Math.floor(Math.random() * 10).toString();
+		var uid = d1.concat(d2, d3);
+		var possibleletters = "abcdefghijklmnopqrstuvwxyz";
+		for(var i = 0; i <= 2; i++) {
+			uid = possibleletters.charAt(Math.floor(Math.random() * 26)).concat(uid);
+		}
+		assassin.insert({password:req.query['pass'], uniqueid:uid, type:"player", first:req.query['first'], last:req.query['last'], role:"assassin", status:"alive"}, id, function(err, body, header) {
+			if(!err) {
+				res.redirect("/login");
+			}
+			else {
+				res.redirect("/signupfailed");
+			}
+		});
+	}
+});
+
 app.get('/create', function(req, res){
 	res.render('create.jade', {pageData: {
 		title: "Make a Game!"
@@ -234,6 +260,27 @@ app.get('/createTeam', function(req, res) {
     }});
 });
 
+app.get('/creatingTeam', function(req, res) {
+	if(req.query['p1'] == req.query['p2']){
+		console.log("moron");
+		res.redirect('/createTeam')
+	}
+	else {
+		var id = req.query['teamname'];
+		var p1 = req.query['p1'];
+		var p2 = req.query['p2'];
+		var teamname = req.query['teamname'];
+		assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
+			if(!err){
+				res.redirect('/resettargets');
+			}
+			else {
+				res.redirect('/createTeam');
+			}
+		});
+	}
+});
+
 app.get('/kill', function(req, res){
 	if(req.userSession && req.userSession.user) { //Check if session exists
 		// lookup the user in the DB by pulling their username from session
@@ -275,9 +322,7 @@ app.get('/resettargets', function(req, res){
 		});
 		console.log(JSON.stringify(teams));
 		assassin.bulk({'docs': teams}, function(err, body){
-			if(!err){
-			res.send(JSON.stringify(body));
-			}
+		res.redirect('/god');
 		});
 	});
 });
@@ -497,33 +542,6 @@ app.get('/welcomehome', function(req, res) {
 		targets.push({"name": "Jon Bass", "target": "Gangrene", "time": "2 minutes"});
 		res.send(JSON.stringify(targets));
 });
-
-//17,576,000 uniqueid possibilites meaning there is a chance that 2 people get the same one
-app.get('/signingup', function(req, res) {
-    if(req.query['pass'] != req.query['pass2']) {
-		res.redirect("/signupfailed");
-	}
-	else {
-		var id = req.query['user'];
-		var d1 = Math.floor(Math.random() * 10).toString();
-		var d2 = Math.floor(Math.random() * 10).toString();
-		var d3 = Math.floor(Math.random() * 10).toString();
-		var uid = d1.concat(d2, d3);
-		var possibleletters = "abcdefghijklmnopqrstuvwxyz";
-		for(var i = 0; i <= 2; i++) {
-			uid = possibleletters.charAt(Math.floor(Math.random() * 26)).concat(uid);
-		}
-		assassin.insert({password:req.query['pass'], uniqueid:uid, type:"player", first:req.query['first'], last:req.query['last'], role:"assassin", status:"alive"}, id, function(err, body, header) {
-			if(!err) {
-				res.redirect("/login");
-			}
-			else {
-				res.redirect("/signupfailed");
-			}
-		});
-	}
-});
-
 
 app.get('/initdata', function(req,res) {
 		datamodule.loaddata(cloudant, function() {
