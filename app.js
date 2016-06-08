@@ -261,6 +261,14 @@ app.get('/createTeam', function(req, res) {
 });
 
 app.get('/creatingTeam', function(req, res) {
+	assassin.view('team', 'teams', {include_docs: true}, function(err, body) {
+		body.rows.forEach(function(team) {
+			if (team.doc.name == req.query['teamname']) {
+				console.log("idiot");
+				res.redirect('/createteam');
+			}
+		});
+	});
 	if(req.query['p1'] == req.query['p2']){
 		console.log("moron");
 		res.redirect('/createTeam')
