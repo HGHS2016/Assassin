@@ -1,3 +1,0 @@
-function resetTargets() {
-  $.get('/resettargets');
-}

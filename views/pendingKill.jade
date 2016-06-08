@@ -1,0 +1,15 @@
+doctype html
+html(lang="en")
+  head
+    include ./templates/header.jade
+    include ./templates/globalVar.jade
+  body(class = bgColor)
+    include ./templates/scripts.jade
+    include ./templates/godNav.jade
+    //body
+    div(class="row" id='body')
+      ul(class = "collapsible" data-collapsible = "accordion")
+        div(class = "collapsible-header black-text")
+          tr()
+            th(class = "table-header") Player
+            th(class = "table-header") 
