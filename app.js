@@ -4,10 +4,20 @@
 // node.js starter application for Bluemix
 //------------------------------------------------------------------------------
 
+//hi!!
 var express = require('express');
 var app = express();
 var session = require('client-sessions');
 var pass = "";
+
+function requireHTTPS(req, res, next) {
+		if (req.headers && req.headers.$wssp === "80") {
+	return res.redirect('https://' + req.get('host') + req.url);
+		}
+		next();
+}
+
+app.use(requireHTTPS);
 
 //var http = require('http')
 
@@ -73,26 +83,29 @@ app.get('/', function(req, res){
 
 app.get('/home', function(req, res){
 	if (req.userSession && req.userSession.user) { //Check if session exists
-		// lookup the user in the DB by pulling their username from session
-		assassin.get(req.userSession.user, function(err, body){
-			if(err){
-				req.userSession.reset();
-				req.redirect('/login')
-			} else {
-				var user = req.userSession.user
-				// expose the user to the template
-				res.locals.user = user;
-				// render the player page
-
-    		res.render('home.jade', {pageData: {
+			// lookup the user in the DB by pulling their username from session
+			assassin.get(req.userSession.user, function(err, body){
+				if(err){
+					req.userSession.reset();
+					req.redirect('/login')
+				} else {
+					if(body.role == "god") {
+						res.redirect('/god');
+					} else {
+						var user = req.userSession.user;
+						// expose the user to the template
+						res.locals.user = user;
+						// render the home page
+						res.render('home.jade', {pageData: {
 					title : "HOME",
 					"user" : user,
-				}});
+						}});
+					}
 				}
-		});
-	} else {
-		res.redirect('/login');
-	}
+			});
+		} else {
+			res.redirect('/login');
+		}
 });
 
 app.get('/login', function(req, res){
@@ -103,38 +116,38 @@ app.get('/login', function(req, res){
 });
 
 app.get('/loggingin', function(req, res) {
-    var user = req.query['user'];
-    var pass = req.query['pass'];
-    assassin.get(req.query['user'], function(err, body) {
+		var user = req.query['user'];
+		var pass = req.query['pass'];
+		assassin.get(req.query['user'], function(err, body) {
 	if(!err) {
-	    if(body.password == req.query['pass']) {
+			if(body.password == req.query['pass']) {
 				// sets a cookie with the user's info
 				req.userSession.user = user;
 				req.userSession.role = body.role;
 		if(body.role == "god") {
-		    res.redirect("/god");
+				res.redirect("/god");
 		}
 		else if(body.role == "assassin") {
-		    res.redirect("/home");
+				res.redirect("/home");
 		}
-	    }
-	    else {
+			}
+			else {
 				console.log("failed");
 				res.render('login.jade', {pageData: {
 					title: "LET'S TRY TO LOGIN AGAIN",
 					error: 'Invalid username or password.'
 				}});
-	    }
+			}
 	}
 	else {
-	    console.log("failed");
-	    res.render('login.jade', {pageData: {
+			console.log("failed");
+			res.render('login.jade', {pageData: {
 				title: "LET'S TRY TO LOGIN AGAIN",
 				error: 'Invalid username or password.'
 			}});
 	}
-    });
-    //res.send("Hi");
+		});
+		//res.send("Hi");
 });
 
 //login should use post, but this is not working
@@ -185,7 +198,7 @@ app.get('/signupfailed', function(req, res){
 
 //17,576,000 uniqueid possibilites meaning there is a chance that 2 people get the same one
 app.get('/signingup', function(req, res) {
-    if(req.query['pass'] != req.query['pass2']) {
+		if(req.query['pass'] != req.query['pass2']) {
 		res.redirect("/signupfailed");
 	}
 	else {
@@ -250,43 +263,77 @@ app.get('/test', function(req, res){
 });
 
 app.get('/unassignedplayers', function(req, res) {
-    datamodule.unassignedplayers(cloudant, res);
+		datamodule.unassignedplayers(cloudant, res);
 });
 
 app.get('/createTeam', function(req, res) {
-    res.render('newteam.jade', {pageData: {
-	title: "Create a Team",
- 	user: req.userSession.user,
-    }});
+		if (req.userSession && req.userSession.user) { //Check if session exists
+			// lookup the user in the DB by pulling their username from session
+			assassin.get(req.userSession.user, function(err, body){
+				if(err){
+					req.userSession.reset();
+					req.redirect('/login')
+				} else {
+					if(body.role == "assassin") {
+						res.redirect('/home');
+					} else {
+						var user = req.userSession.user;
+						// expose the user to the template
+						res.locals.user = user;
+						// render the new team page
+						res.render('newteam.jade', {pageData: {
+						title: "Create a Team",
+						user: req.userSession.user,
+							}});
+					}
+				}
+			});
+		} else {
+			res.redirect('/login');
+		}
 });
 
 app.get('/creatingTeam', function(req, res) {
 	assassin.view('team', 'teams', {include_docs: true}, function(err, body) {
+		var i = 0;
+		var last = body.rows.length-1;
 		body.rows.forEach(function(team) {
 			if (team.doc.name == req.query['teamname']) {
 				console.log("idiot");
-				res.redirect('/createteam');
+				res.render('newteam.jade', {pageData: {
+					title: "LET'S TRY AGAIN",
+					error: 'Team name taken'
+				}});
+			}
+			i++
+			if(i == last){
+				if(req.query['p1'] == req.query['p2']){
+					console.log("moron");
+					res.render('newteam.jade', {pageData: {
+						title: "LET'S TRY AGAIN",
+						error: 'p1 and p2 are the same'
+					}});
+				}
+				else {
+					var id = req.query['teamname'];
+					var p1 = req.query['p1'];
+					var p2 = req.query['p2'];
+					var teamname = req.query['teamname'];
+					assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
+						if(!err){
+							res.redirect('/resettargets');
+						}
+						if(err){
+							res.render('newteam.jade', {pageData: {
+								title: "LET'S TRY AGAIN",
+								error: 'unknown error'
+							}});
+						}
+					});
+				}
 			}
 		});
 	});
-	if(req.query['p1'] == req.query['p2']){
-		console.log("moron");
-		res.redirect('/createTeam')
-	}
-	else {
-		var id = req.query['teamname'];
-		var p1 = req.query['p1'];
-		var p2 = req.query['p2'];
-		var teamname = req.query['teamname'];
-		assassin.insert({type:"team", name:teamname, player1:p1, player2:p2, target:"none", score:"0"}, id, function(err, body, header) {
-			if(!err){
-				res.redirect('/resettargets');
-			}
-			else {
-				res.redirect('/createTeam');
-			}
-		});
-	}
 });
 
 app.get('/kill', function(req, res){
@@ -561,7 +608,7 @@ app.get('/goodkill', function(req, res) {
 
 // New version of teamlist
 app.get('/teamlist', function(req, res) {
-    datamodule.computeteams(cloudant, res)
+		datamodule.computeteams(cloudant, res)
 });
 
 /* Old version of teamlist
@@ -594,12 +641,12 @@ app.get('/teamlist', function(req, res) {
 */
 
 app.get('/targetlist', function(req, res) {
-    datamodule.computeteams(cloudant, res)
+		datamodule.computeteams(cloudant, res)
 });
 
 app.get('/mytarget', function(req, res) {
-    user = req.query['user'];
-    datamodule.computemytarget(cloudant, user, res)
+		user = req.query['user'];
+		datamodule.computemytarget(cloudant, user, res)
 });
 
 //    targets.push({"name": "Hanzhi Zou", "target": "Sonya", "time": "2 hours"});
