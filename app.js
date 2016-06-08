@@ -4,6 +4,7 @@
 // node.js starter application for Bluemix
 //------------------------------------------------------------------------------
 
+//hi!!
 var express = require('express');
 var app = express();
 var session = require('client-sessions');
