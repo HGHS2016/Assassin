@@ -4,5 +4,10 @@ function createDropDown(killer, killed, notes) {
               "<tr>" +
                 "<th class = 'table-header'>" + killer + "</th>" +
                 "<th class = 'table-header'>" + killed + "</th>" +
-                
+              "</tr>" +
+            "</div>" +
+            "<div class = 'collapsible-body'>" +
+              "<p> hi </p>" +
+            "</div>" +
+          "</ul>";
 }

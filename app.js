@@ -385,7 +385,7 @@ app.get('/sendingkill', function(req, res) {
 								if(body.rows.length == 0) {
 									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"needs approval"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body, header) {
 										if(!err3) {
-											res.send("Kill Submitted");
+											res.redirect('/home');
 										}
 										else {
 											res.send("err3");
@@ -396,7 +396,7 @@ app.get('/sendingkill', function(req, res) {
 								else {
 									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
 										if(!err3) {
-											res.send("Kill Submitted");
+											res.redirect('/home');
 										}
 										else {
 											res.send("err3");
@@ -412,7 +412,7 @@ app.get('/sendingkill', function(req, res) {
 					found = true;
 				}
 				else if(count == body.rows.length && !found) {
-					res.send("unique id not found");
+					res.redirect('/kill');
 				}
 			});
 		}
@@ -455,12 +455,12 @@ app.get('/confirmkill', function(req, res) {
 });
 
 app.get('/confirmingkill', function(req, res) {
-	var id = "279491357073a32cb0f8052b436853df";//to be coded later
+	var id = "f6914a66cb29f592f1b726ad73b568f3";//to be coded later
 	assassin.get(id, function(err, body) {
 		if(!err) {
 			var geometry = body.geometry;
 			var confirmation = "true";//to be coded later
-			var notes = "Kill is ok, I guess...";//to be coded later
+			var notes = "Kill is ok";//to be coded later
 			if(notes.length == 0) {
 				notes = "none";
 			}
@@ -470,7 +470,7 @@ app.get('/confirmingkill', function(req, res) {
 						res.redirect('/killingplayer?killed=' + body.properties.killed);
 					}
 					else {
-						res.send("kill denied");//to be coded later
+						res.redirect('/pendingKill');//to be coded later
 					}
 				}
 				else {
@@ -495,8 +495,8 @@ app.get('/killingplayer', function(req, res) {
 	var id = req.param('killed');
 	assassin.get(id, function(err, body) {
 		if(!err) {
-			assassin.insert({"_id":id, "_rev":body._rev, "password":body.password, "uniqueid":body.uniqueid, "type":body.type, "first":body.first, "last":body.last, "role":"assassin", "status":"dead"}, function(err2, body2, header) {
-				res.send("Player " + id + " has been killed");
+			assassin.insert({"_id":id, "_rev":body._rev, "password":body.password, "uniqueid":body.uniqueid, "type":body.type, "first":body.first, "last":body.last, "role":body.role, "status":"dead"}, function(err2, body2, header) {
+				res.redirect('/pendingKill');
 			});
 		}
 		else {
