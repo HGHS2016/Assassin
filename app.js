@@ -10,10 +10,10 @@ var session = require('client-sessions');
 var pass = "";
 
 function requireHTTPS(req, res, next) {
-    if (req.headers && req.headers.$wssp === "80") {
+		if (req.headers && req.headers.$wssp === "80") {
 	return res.redirect('https://' + req.get('host') + req.url);
-    }
-    next();
+		}
+		next();
 }
 
 app.use(requireHTTPS);
@@ -82,26 +82,29 @@ app.get('/', function(req, res){
 
 app.get('/home', function(req, res){
 	if (req.userSession && req.userSession.user) { //Check if session exists
-		// lookup the user in the DB by pulling their username from session
-		assassin.get(req.userSession.user, function(err, body){
-			if(err){
-				req.userSession.reset();
-				req.redirect('/login')
-			} else {
-				var user = req.userSession.user
-				// expose the user to the template
-				res.locals.user = user;
-				// render the player page
-
-				res.render('home.jade', {pageData: {
+			// lookup the user in the DB by pulling their username from session
+			assassin.get(req.userSession.user, function(err, body){
+				if(err){
+					req.userSession.reset();
+					req.redirect('/login')
+				} else {
+					if(body.role == "god") {
+						res.redirect('/god');
+					} else {
+						var user = req.userSession.user;
+						// expose the user to the template
+						res.locals.user = user;
+						// render the home page
+						res.render('home.jade', {pageData: {
 					title : "HOME",
 					"user" : user,
-				}});
+						}});
+					}
 				}
-		});
-	} else {
-		res.redirect('/login');
-	}
+			});
+		} else {
+			res.redirect('/login');
+		}
 });
 
 app.get('/login', function(req, res){
