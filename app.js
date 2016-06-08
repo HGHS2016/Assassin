@@ -342,18 +342,25 @@ app.get('/sendingkill', function(req, res) {
 	var lat;
 	var count = 0;
 	console.log(rawlatlong);
-	while(rawlatlong.charAt(count) != ' ') {
-		count++;
+	if(rawlatlong == "") {
+		console.log("ENTERED IF");
+		longlat = "";
 	}
-	lat = rawlatlong.substring(0, count);
-	count+=3;
-	count2 = count;
-	while(rawlatlong.charAt(count2) != ' ') {
-		count2++;
+	else {
+		console.log("ENTERED ELSE");
+		while(rawlatlong.charAt(count) != ' ') {
+			count++;
+		}
+		lat = rawlatlong.substring(0, count);
+		count+=3;
+		count2 = count;
+		while(rawlatlong.charAt(count2) != ' ') {
+			count2++;
+		}
+		long = rawlatlong.substring(count2, count);
+		longlat = long + "+" + lat;
+		console.log("Final: nospace" + longlat + "nospace");
 	}
-	long = rawlatlong.substring(count2, count);
-	longlat = long + "+" + lat;
-	console.log("Final: nospace" + longlat + "nospace");
 	assassin.view('players', 'players-index', {include_docs: true},  function(err, body) {
 		if(!err) {
 			//searches through all players to find entered in unique id
@@ -366,39 +373,56 @@ app.get('/sendingkill', function(req, res) {
 					assassin.get(row.doc._id, function(err2, body2) {
 						if(!err2) {
 							//finds path for geo view to check to see if the point is in any safezones
-							var opts = {};
-							opts.db = "assassin";
-							opts.method = "get";
-							opts.content_type = "json";
-							opts.path = "_design/location/_geo/newGeoIndex?g=POINT(" + longlat + ")&include_docs=true";
-							cloudant.request(opts, function(err,body) {
-								if (err) {
-									console.log("[cloudant error" + JSON.stringify(err));
-									return;
-								}
-								//goes here if there are no safezone conflicts (i.e. array of safezone conflicts is 0)
-								if(body.rows.length == 0) {
-									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"needs approval"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body, header) {
-										if(!err3) {
-											res.redirect('/home');
-										}
-										else {
-											res.send("err3");
-										}
-									});
-								}
-								//goes here if there is/are safezone conflicts
-								else {
-									assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":{}}}, function(err3, body, header) {
-										if(!err3) {
-											res.redirect('/home');
-										}
-										else {
-											res.send("err3");
-										}
-									});
-								}
-							});
+							if(longlat.length != 0) {
+								var opts = {};
+								opts.db = "assassin";
+								opts.method = "get";
+								opts.content_type = "json";
+								opts.path = "_design/location/_geo/safezoneindex?g=POINT(" + longlat + ")&include_docs=true";
+								cloudant.request(opts, function(err,body3) {
+									if (err) {
+										console.log("[cloudant error" + JSON.stringify(err));
+										return;
+									}
+									//goes here if there are no safezone conflicts (i.e. array of safezone conflicts is 0)
+									console.log("THIS IS THE LENGTH OF BODY AND ROWS: " + body3.rows.length);
+									if(body3.rows.length == 0) {
+										console.log("FIRST OPTION");
+										assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"needs approval"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body4, header) {
+											if(!err3) {
+												res.redirect('/home');
+											}
+											else {
+												res.send("err3");
+											}
+										});
+									}
+									//goes here if there is/are safezone conflicts
+									else {
+										console.log("SECOND OPTION");
+										assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"safezone fail"}, "geometry":{"type":"Point", "coordinates":[parseFloat(long), parseFloat(lat)]}}, function(err3, body4, header) {
+											if(!err3) {
+												res.redirect('/home');
+											}
+											else {
+												res.send("err3");
+											}
+										});
+									}
+								});
+							}
+							else {
+								console.log("THIRD OPTION");
+								//goes here if location was not recorded
+								assassin.insert({"properties":{"type":"kill", "killer":req.userSession.user, "killed":body2._id, "lookedat":"false", "confirmed":"false", "notes":"location not recorded"}, "geometry":{"type":"Point", "coordinates":[]}}, function(err3, body4, header) {
+									if(!err3) {
+										res.redirect('/home');
+									}
+									else {
+										res.send("err3");
+									}
+								});
+							}
 						}
 						else {
 							res.send("err2");//error if no docs found under row.doc._id (shouldn't ever hit this error)
@@ -450,12 +474,12 @@ app.get('/confirmkill', function(req, res) {
 });
 
 app.get('/confirmingkill', function(req, res) {
-	var id = "f6914a66cb29f592f1b726ad73b568f3";//to be coded later
+	var id = "e8fcac94548af4a12aae93b6c15c67e5";//to be coded later
 	assassin.get(id, function(err, body) {
 		if(!err) {
 			var geometry = body.geometry;
-			var confirmation = "true";//to be coded later
-			var notes = "Kill is ok";//to be coded later
+			var confirmation = "false";//to be coded later
+			var notes = "How was he not killed!?";//to be coded later
 			if(notes.length == 0) {
 				notes = "none";
 			}
