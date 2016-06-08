@@ -29,13 +29,13 @@ function computemytarget(cloudant, user, response) {
 	    var j=0;
 
 	    // find the player's team
-	    while (team.name != player.team && j < teams.length-1) { j = j+1; team = teams[j]; console.log(team);}; 
+	    while (team.name != player.team && j < teams.length-1) { j = j+1; team = teams[j]; console.log(team);};
 	    if (j == teams.length-1) {console.log("no team found for player" + JSON.stringify(player));
 				     response.send("");}
 	    // find the team's target information
 	    j=0;
 	    target = teams[0];
-	    while (target.name != team.target.current && j < teams.length-1) { j = j+1; target = teams[j]}; 
+	    while (target.name != team.target.current && j < teams.length-1) { j = j+1; target = teams[j]};
 	    if (j == teams.length-1) response.send("");
 //	    target = {"name":"pineapple","player1":{"name":"Jaret Stillman","status":"alive"},"player2":{"name":"Jeff Liu","status":"alive"}};
 	    console.log(JSON.stringify(target));
@@ -49,13 +49,13 @@ function unassignedplayers(cloudant, response) {
     computeplayersJSON( function(players) {
 	var unassigned = [];
 	players.forEach(function(player) {
-	    if(player.team == "" && player.role != "god") unassigned.push(player); 
+	    if(player.team == "" && player.role != "god") unassigned.push(player);
 	});
 	response.send(JSON.stringify(unassigned));
     });
 }
-			     
-	
+
+
 function computeplayers(cloudant, response) {
     local = cloudant;
     computeplayersJSON( function (players) {
@@ -184,7 +184,7 @@ function computeteamstatus(team) {
 		if (team.player1.status != 'alive' && team.player2.status != 'alive')
 	team.status = 'dead';
 		else team.status = 'alive';
-		if (team.name == "grape" || team.name == "cantalope") team.status = 'dead';
+		//if (team.name == "grape" || team.name == "cantalope") team.status = 'dead';
 }
 
 
