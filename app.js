@@ -554,6 +554,16 @@ app.get('/pendingKill', function(req, res){
 	}});
 });
 
+app.get('/determinekill', function(req,res){
+	if(req.query['action'] == "good"){
+		console.log("yay!");
+			res.redirect('/goodkill');
+	} else if(req.query['action'] == "bad") {
+		console.log("boo!");
+		res.redirect('/badkill');
+	}
+});
+
 app.get('/killingplayer', function(req, res) {
 	var id = req.param('killed');
 	assassin.get(id, function(err, body) {
