@@ -1,5 +1,5 @@
 
-function createDropDown(killer, killed, notes) {
+function createDropDown(id, killer, killed, notes) {
   return "<li>" +
             "<div class = 'collapsible-header blue-grey darken-1'>" +
               "<div class='row'>" +
@@ -15,6 +15,9 @@ function createDropDown(killer, killed, notes) {
                     "<input type='hidden' name='Killer' value'" + killer + "'>" +
                   "</div>" +
                   "<div class='input-field'>" +
+                    "<input type='hidden' name='id' value'" + id + "'>" +
+                  "</div>" +
+                  "<div class='input-field'>" +
                     "<input type='hidden' name='Killed' value'" + killed + "'>" +
                   "</div>" +
                   "<div class='input-field' col s12>" +
@@ -22,10 +25,10 @@ function createDropDown(killer, killed, notes) {
                     "<textarea class='materialize-textarea white-text' name='notes' id='notes'>" + notes + "</textarea>" +
                   "</div>" +
                   "<div class='row'>"+
-                    "<button class='card btn waves-effect waves-light col' type='submit' name='action' value='false'>" +
+                    "<button class='card btn waves-effect waves-light col' type='submit' name='confirm' value='false'>" +
                       "<i class='material-icons'>thumb_down</i>" +
                     "</button>" +
-                    "<button class='card btn waves-effect waves-light col' type='submit' name='action' value='true'>" +
+                    "<button class='card btn waves-effect waves-light col' type='submit' name='confirm' value='true'>" +
                       "<i class='material-icons'>thumb_up</i>" +
                     "</button>" +
                   "</div>" +
@@ -42,7 +45,7 @@ function generatePendingDropDowns(){
     var html = '';
     var kills = JSON.parse(data);
     kills.forEach(function(info) {
-      html = html.concat(createDropDown(info.killer,info.killed,info.notes))
+      html = html.concat(createDropDown(info.id, info.killer,info.killed,info.notes))
     });
 
     body.append(html);
