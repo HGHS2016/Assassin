@@ -10,7 +10,7 @@ function createDropDown(killer, killed, notes) {
             "</div>" +
             "<div class = 'collapsible-body blue-grey darken-2 black-text'>" +
               "<div class='row'>" +
-                "<form class='col s12' action='/determinekill'>" +
+                "<form class='col s12' action='/confirmingkill'>" +
                   "<div class='input-field'>" +
                     "<input type='hidden' name='Killer' value'" + killer + "'>" +
                   "</div>" +
@@ -22,10 +22,10 @@ function createDropDown(killer, killed, notes) {
                     "<textarea class='materialize-textarea white-text' name='notes' id='notes'>" + notes + "</textarea>" +
                   "</div>" +
                   "<div class='row'>"+
-                    "<button class='card btn waves-effect waves-light col' type='submit' name='action' value='bad'>" +
+                    "<button class='card btn waves-effect waves-light col' type='submit' name='action' value='false'>" +
                       "<i class='material-icons'>thumb_down</i>" +
                     "</button>" +
-                    "<button class='card btn waves-effect waves-light col' type='submit' name='action' value='good'>" +
+                    "<button class='card btn waves-effect waves-light col' type='submit' name='action' value='true'>" +
                       "<i class='material-icons'>thumb_up</i>" +
                     "</button>" +
                   "</div>" +
