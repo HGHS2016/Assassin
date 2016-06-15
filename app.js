@@ -493,7 +493,7 @@ app.get('/confirmkill', function(req, res) {
 						kills.push(killrow);
 						curkill = row.key.kill;
 						killrow = {};
-						killrow.name = curkill;
+						killrow._id = curkill;
 					}
 					if (row.key.field == 'killer')
 						killrow.killer = row.doc.first.concat(' ').concat(row.doc.last);

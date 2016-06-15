@@ -77,13 +77,13 @@ function populatePlayerTable() {
     var table = $("#player_table tr");
     var toggle = true;
     $.get("/playerlist", function(data) {
-	var html = '';
-	var players = JSON.parse(data);
-	players.forEach(function(player) {
-	    toggle = !toggle;
-	    html = html.concat(createPlayerTableRow(player.name, player.role, player.status, toggle));
-	});
-	table.last().after(html);
+      var html = '';
+      var players = JSON.parse(data);
+      players.forEach(function(player) {
+        toggle = !toggle;
+        html = html.concat(createPlayerTableRow(player.name, player.role, player.status, toggle));
+      });
+      table.last().after(html);
     });
 }
 

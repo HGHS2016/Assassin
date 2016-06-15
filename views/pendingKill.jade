@@ -1,11 +1,12 @@
 doctype html
 html(lang="en")
-  head
-    include ./templates/header.jade
-    include ./templates/globalVar.jade
-  body(class = bgColor)
-    include ./templates/scripts.jade
-    script(type="text/javascript" src="js/pendingKill.js")
-    include ./templates/godNav.jade
-    //body
-    div(class="row" id='body')
+	head
+		include ./templates/header.jade
+		include ./templates/globalVar.jade
+	body(class = bgColor)
+		include ./templates/scripts.jade
+		script(type="text/javascript" src="js/pendingKill.js")
+		include ./templates/godNav.jade
+		//body
+		div(class="container" id='body')
+			ul(class = "card collapsible deep-purple" data-collapsible = "accordion" id = "list")
