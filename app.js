@@ -518,12 +518,12 @@ app.get('/confirmkill', function(req, res) {
 });
 
 app.get('/confirmingkill', function(req, res) {
-	var id = "e8fcac94548af4a12aae93b6c15c67e5";//to be coded later
+	var id = req.param('id');//to be coded later
 	assassin.get(id, function(err, body) {
 		if(!err) {
 			var geometry = body.geometry;
-			var confirmation = "false";//to be coded later
-			var notes = "How was he not killed!?";//to be coded later
+			var confirmation = req.param('confirm');//to be coded later
+			var notes = req.param('notes');//to be coded later
 			if(notes.length == 0) {
 				notes = "none";
 			}
