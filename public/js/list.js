@@ -106,20 +106,20 @@ function populateTeamTable() {
  * Called when the DOM is fully loaded.
  */
 function populateTargetTable() {
-    var table = $("#target_table tr");
-    var toggle = true;
-    $.get("/teamlist", function(data) {
-	     var teams = JSON.parse(data);
-	      var html = '';
-	teams.forEach(function(team) {
-	    if (team.status != "dead") {
-		toggle = !toggle;
-		console.log("Team is: " + JSON.stringify(team));
-		html = html.concat(createTargetTableRow(team.name, team.player1.name, team.player2.name, team.target.current, toggle));
+  var table = $("#target_table tr");
+  var toggle = true;
+  $.get("/teamlist", function(data) {
+	  var teams = JSON.parse(data);
+	  var html = '';
+    teams.forEach(function(team) {
+      if (team.status != "dead") {
+        toggle = !toggle;
+	      console.log("Team is: " + JSON.stringify(team));
+	      html = html.concat(createTargetTableRow(team.name, team.player1.name, team.player2.name, team.target.current, toggle));
 	    }
-	});
-	table.last().after(html);
     });
+    table.last().after(html);
+  });
 }
 
 $(populatePlayerTable);

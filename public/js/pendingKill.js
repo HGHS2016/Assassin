@@ -11,3 +11,15 @@ function createDropDown(killer, killed, notes) {
             "</div>" +
           "</ul>";
 }
+
+function generatePendingDropDowns(){
+  var body = $("#body");
+  console.log("hi!");
+  $.get("/confirmkill", function(data) {
+    var html = '';
+    console.log(data);
+    //var kills = JSON.parse(data);
+  }
+}
+
+$(generatePendingDropDowns);
